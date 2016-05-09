@@ -119,7 +119,8 @@ public class PlayerScript : MonoBehaviour
 		}*/
 
 		if (Controller.isGrounded) {
-			vSpeed = 0;
+			//See why i did that shit
+			//vSpeed = 0;
 		}
 	}
 
