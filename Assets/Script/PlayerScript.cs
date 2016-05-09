@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Rewired;
+using DG.Tweening;
 
 [RequireComponent (typeof(CharacterController))]
 public class PlayerScript : MonoBehaviour
 {
+
+	[Header ("Jump")]
 	[SerializeField]
-	private float Speed = 5;
+	private float JumpPower = 2;
+
 
 
 	private CharacterController Controller;
@@ -15,12 +19,18 @@ public class PlayerScript : MonoBehaviour
 	private Vector3 Down;
 
 	private HandManager HandMana;
+	[Header ("Players Infos")]
+	[SerializeField]
+	private float Speed = 5;
 
 	public int PlayerID;
 	private Player LocalPlayer;
 
 	public bool LocalCanTake = false;
 	public GameObject LightToTake;
+
+	private float vSpeed = 0;
+	private Vector3 vel;
 
 	void Start ()
 	{
@@ -34,16 +44,19 @@ public class PlayerScript : MonoBehaviour
 	void Awake ()
 	{
 		LocalPlayer = ReInput.players.GetPlayer (PlayerID);
-
+		DOTween.Init ();
 		LocalPlayer.AddInputEventDelegate (Jump, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Jump");
 		LocalPlayer.AddInputEventDelegate (MoveRight, UpdateLoopType.Update, InputActionEventType.ButtonPressed, "Right");
+		LocalPlayer.AddInputEventDelegate (StopRight, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, "Right");
 		LocalPlayer.AddInputEventDelegate (MoveLeft, UpdateLoopType.Update, InputActionEventType.ButtonPressed, "Left");
+		LocalPlayer.AddInputEventDelegate (StopLeft, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, "Left");
 		LocalPlayer.AddInputEventDelegate (TakeObject, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Take");
 	}
 
 	void Update ()
 	{
 		GroundCheck ();
+		Move ();
 	}
 
 	void TakeObject (InputActionEventData data)
@@ -51,24 +64,47 @@ public class PlayerScript : MonoBehaviour
 		if (LocalCanTake) {
 			if (HandMana.InHand != HandManager.Hand.Light) {
 				HandMana.TakeLight (LightToTake);
+				LocalCanTake = false;
+			}
+		} else {
+			if (HandMana.InHand == HandManager.Hand.Light) {
+				HandMana.DropLight ();
 			}
 		}
 	}
 
+	void StopRight (InputActionEventData data)
+	{
+		
+		vel = Vector3.zero;
+	}
+
+	void StopLeft (InputActionEventData data)
+	{
+
+		vel = Vector3.zero;
+	}
 
 	void MoveRight (InputActionEventData data)
 	{
-		Controller.SimpleMove (Right * Speed);
+		vel = (Right * Speed);
 	}
 
 	void MoveLeft (InputActionEventData data)
 	{
-		Controller.SimpleMove (Left * Speed);
+		vel = (Left * Speed);
 	}
 
-	void MoveDown ()
+	void Move ()
 	{
-		Controller.SimpleMove (Down * Speed * 0.5f);
+		
+
+		vel.y = vSpeed;
+		vSpeed -= 9.8f * Time.deltaTime;
+		vel -= Vector3.zero * 100;
+		Controller.Move (vel * Speed * Time.deltaTime);
+		Debug.Log (vSpeed);
+	
 	}
 
 	void GroundCheck ()
@@ -81,15 +117,17 @@ public class PlayerScript : MonoBehaviour
 				MoveDown ();
 			}
 		}*/
-		if (!Controller.isGrounded) {
-			MoveDown ();
+
+		if (Controller.isGrounded) {
+			vSpeed = 0;
 		}
 	}
 
 	void Jump (InputActionEventData data)
 	{
 		if (Controller.isGrounded) {
-			Controller.Move (Vector3.up * 50 * (Speed / 10) * Time.deltaTime);
+			/*Controller.Move (Vector3.up * JumHigh * Speed * Time.deltaTime);*/
+			vSpeed = JumpPower;
 		}
 	}
 
