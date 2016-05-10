@@ -43,6 +43,8 @@ public class PlayerScript : MonoBehaviour
 		Left = transform.TransformDirection (Vector3.left);
 		Down = transform.TransformDirection (Vector3.down) * 10;
 		HandMana = GetComponentInChildren<HandManager> ();
+
+		Physics.IgnoreLayerCollision (10, 11);
 	}
 
 	void Awake ()

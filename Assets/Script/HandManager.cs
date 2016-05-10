@@ -11,14 +11,20 @@ public class HandManager : MonoBehaviour
 	[SerializeField]
 	private GameObject LightPrefab;
 	[SerializeField]
+	private GameObject Spawnpoint;
+	[SerializeField]
 	private GameObject Muzzle;
 	[SerializeField]
 	private float ShotgunRealoadTime = 2;
+	[SerializeField]
+	private LayerMask LayerShotGun;
+	[SerializeField]
+	private float LightThrowPower = 1;
 
 	private int int_ShotGun = 2;
 
 
-	private Vector3 TempShotgun;
+	private Vector3 TempAngle;
 
 
 
@@ -50,7 +56,16 @@ public class HandManager : MonoBehaviour
 		InHand = Hand.Shotgun;
 		SpotLight.SetActive (false);
 		Shotgun.SetActive (true);
-		Instantiate (LightPrefab, this.transform.position, this.transform.rotation);
+		Instantiate (LightPrefab, Spawnpoint.transform.position, this.transform.rotation);
+	}
+
+	void LaunchLight ()
+	{
+		InHand = Hand.Shotgun;
+		SpotLight.SetActive (false);
+		Shotgun.SetActive (true);
+		GameObject LightTrowed = Instantiate (LightPrefab, Spawnpoint.transform.position, this.transform.rotation) as GameObject;
+		LightTrowed.GetComponent<Rigidbody> ().AddForce (Spawnpoint.transform.TransformDirection (Vector3.forward) * (LightThrowPower * 100));
 	}
 
 	public void InputWork (float AxisX, float AxisY)
@@ -66,20 +81,19 @@ public class HandManager : MonoBehaviour
 	{
 		if (InHand == Hand.Light) {
 			Vector3 Angle = new Vector3 (StickValue - 90, 0, 0);
+			TempAngle = Angle;
 			SpotLight.transform.localEulerAngles = Angle;
 		}
 		if (InHand == Hand.Shotgun) {
 			Vector3 Angle = new Vector3 (0, 0, -StickValue);
-			TempShotgun = Angle;
+			TempAngle = Angle;
 			Shotgun.transform.localEulerAngles = Angle;
 		}
 	}
 
 	public void HandAction ()
 	{
-		if (InHand == Hand.Light) {
-
-		}
+		
 		if (InHand == Hand.Shotgun) {
 			if (int_ShotGun > 0) {
 				int_ShotGun--;
@@ -88,7 +102,9 @@ public class HandManager : MonoBehaviour
 					StartCoroutine ("Reload");
 				}
 			}
-
+		}
+		if (InHand == Hand.Light) {
+			LaunchLight ();
 		}
 	}
 
@@ -99,8 +115,9 @@ public class HandManager : MonoBehaviour
 		RaycastHit hit;
 		//Replace ShotgunPosition with muzzle position
 		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 10, Color.red);
-		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit)) {
-			//Debug.Log (hit.collider.gameObject.name);
+
+		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit, LayerShotGun)) {
+			Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
 				EnnemieScript.Die ();
