@@ -10,6 +10,8 @@ public class PlayerScript : MonoBehaviour
 	[Header ("Jump")]
 	[SerializeField]
 	private float JumpPower = 2;
+	[SerializeField]
+	private float Gravity = 9.8f;
 
 
 
@@ -31,13 +33,14 @@ public class PlayerScript : MonoBehaviour
 
 	private float vSpeed = 0;
 	private Vector3 vel;
+	private bool Jumping = false;
 
 	void Start ()
 	{
 		Controller = GetComponent<CharacterController> ();
 		Right = transform.TransformDirection (Vector3.right);
 		Left = transform.TransformDirection (Vector3.left);
-		Down = transform.TransformDirection (Vector3.down) * 10000000;
+		Down = transform.TransformDirection (Vector3.down) * 10;
 		HandMana = GetComponentInChildren<HandManager> ();
 	}
 
@@ -51,12 +54,26 @@ public class PlayerScript : MonoBehaviour
 		LocalPlayer.AddInputEventDelegate (MoveLeft, UpdateLoopType.Update, InputActionEventType.ButtonPressed, "Left");
 		LocalPlayer.AddInputEventDelegate (StopLeft, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, "Left");
 		LocalPlayer.AddInputEventDelegate (TakeObject, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Take");
+		LocalPlayer.AddInputEventDelegate (Action, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "ActionInput");
 	}
 
 	void Update ()
 	{
 		GroundCheck ();
 		Move ();
+		UpdateHandPosition ();
+	}
+
+	void UpdateHandPosition ()
+	{
+		float LookX = LocalPlayer.GetAxis ("LookX");
+		float LookY = LocalPlayer.GetAxis ("LookY");
+		HandMana.InputWork (LookX, LookY);
+	}
+
+	void Action (InputActionEventData data)
+	{
+		HandMana.HandAction ();
 	}
 
 	void TakeObject (InputActionEventData data)
@@ -100,10 +117,12 @@ public class PlayerScript : MonoBehaviour
 		
 
 		vel.y = vSpeed;
-		vSpeed -= 9.8f * Time.deltaTime;
+		if (!Controller.isGrounded) {
+			vSpeed -= Gravity * Time.deltaTime;
+		}
+
 		vel -= Vector3.zero * 100;
 		Controller.Move (vel * Speed * Time.deltaTime);
-		Debug.Log (vSpeed);
 	
 	}
 
@@ -119,21 +138,24 @@ public class PlayerScript : MonoBehaviour
 		}*/
 
 		if (Controller.isGrounded) {
-			//See why i did that shit
-			//vSpeed = 0;
+			if (Jumping == false) {
+				vSpeed = 0;
+			}
 		}
 	}
 
 	void Jump (InputActionEventData data)
 	{
 		if (Controller.isGrounded) {
-			/*Controller.Move (Vector3.up * JumHigh * Speed * Time.deltaTime);*/
+			Jumping = true;
 			vSpeed = JumpPower;
 		}
 	}
 
 	void OnCollisionEnter (Collision thing)
 	{
-		Debug.Log (thing.gameObject.name);
+		if (thing.gameObject.CompareTag ("Ennemie")) {
+			Debug.Log ("YOU DED");
+		}
 	}
 }
