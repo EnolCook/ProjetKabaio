@@ -85,6 +85,7 @@ public class HandManager : MonoBehaviour
 		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 10, Color.red);
 		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit)) {
 			//Debug.Log (hit.collider.gameObject.name);
+			Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
 				EnnemieScript.Die ();
