@@ -17,8 +17,6 @@ public class HandManager : MonoBehaviour
 	[SerializeField]
 	private float ShotgunRealoadTime = 2;
 	[SerializeField]
-	private LayerMask LayerShotGun;
-	[SerializeField]
 	private float LightThrowPower = 1;
 
 	private int int_ShotGun = 2;
@@ -116,7 +114,7 @@ public class HandManager : MonoBehaviour
 		//Replace ShotgunPosition with muzzle position
 		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 1000, Color.red);
 
-		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit, LayerShotGun)) {
+		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit)) {
 			Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
