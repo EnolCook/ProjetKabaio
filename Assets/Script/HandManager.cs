@@ -114,7 +114,7 @@ public class HandManager : MonoBehaviour
 	{
 		RaycastHit hit;
 		//Replace ShotgunPosition with muzzle position
-		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 10, Color.red);
+		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 1000, Color.red);
 
 		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit, LayerShotGun)) {
 			Debug.Log (hit.collider.gameObject.name);
