@@ -12,6 +12,17 @@ public class Ennemie : MonoBehaviour
 	[SerializeField]
 	LightStatus EnnemieLightStatus;
 
+	GameObject LightImIn;
+
+	void Update ()
+	{
+		if (LightImIn == null) {
+			EnnemieLightStatus = LightStatus.NotInLight;
+		} else {
+			Debug.Log ("Light");
+		}
+	}
+
 
 	public void Die ()
 	{
@@ -29,4 +40,10 @@ public class Ennemie : MonoBehaviour
 	{
 		EnnemieLightStatus = LightStatus.NotInLight;
 	}
+
+	public void SetLightYourIn (GameObject LightObject)
+	{
+		LightImIn = LightObject;
+	}
+
 }
