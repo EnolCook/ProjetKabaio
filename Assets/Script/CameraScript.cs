@@ -6,15 +6,18 @@ public class CameraScript : MonoBehaviour
 {
 
 
-	[SerializeField]
 	private GameObject Player1;
-
-	[SerializeField]
 	private GameObject Player2;
 
 	void Awake ()
 	{
 		DOTween.Init ();
+	}
+
+	void Start ()
+	{
+		Player1 = GameManager.Instance.Player1;
+		Player2 = GameManager.Instance.Player2;
 	}
 	
 	// Update is called once per frame

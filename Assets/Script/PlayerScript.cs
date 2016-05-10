@@ -34,6 +34,7 @@ public class PlayerScript : MonoBehaviour
 	private float vSpeed = 0;
 	private Vector3 vel;
 	private bool Jumping = false;
+	private bool OnGround;
 
 	void Start ()
 	{
@@ -129,15 +130,15 @@ public class PlayerScript : MonoBehaviour
 	void GroundCheck ()
 	{
 		//Could replace isGrounded by a Raycast to have more precision. TODO if time and usage.
-		/*RaycastHit Hit;
+		RaycastHit Hit;
 		if (Physics.Raycast (transform.position, Down, out Hit)) {
-			if (Hit.distance > 2) {
-				//Debug.Log ("Falling");
-				MoveDown ();
+			if (Hit.distance > 1.1f) {
+				OnGround = false;
+			} else {
+				OnGround = true;
 			}
-		}*/
-
-		if (Controller.isGrounded) {
+		}
+		if (OnGround) {
 			if (Jumping == false) {
 				vSpeed = 0;
 			}
@@ -146,7 +147,7 @@ public class PlayerScript : MonoBehaviour
 
 	void Jump (InputActionEventData data)
 	{
-		if (Controller.isGrounded) {
+		if (OnGround) {
 			Jumping = true;
 			vSpeed = JumpPower;
 		}

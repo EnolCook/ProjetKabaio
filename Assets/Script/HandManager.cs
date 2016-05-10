@@ -12,9 +12,16 @@ public class HandManager : MonoBehaviour
 	private GameObject LightPrefab;
 	[SerializeField]
 	private GameObject Muzzle;
+	[SerializeField]
+	private float ShotgunRealoadTime = 2;
+
+	private int int_ShotGun = 2;
+
 
 	private Vector3 TempShotgun;
-	private float ShotGunCD;
+
+
+
 
 	public enum Hand
 	{
@@ -74,9 +81,18 @@ public class HandManager : MonoBehaviour
 
 		}
 		if (InHand == Hand.Shotgun) {
-			RayShotgun ();
+			if (int_ShotGun > 0) {
+				int_ShotGun--;
+				RayShotgun ();
+				if (int_ShotGun == 0) {
+					StartCoroutine ("Reload");
+				}
+			}
+
 		}
 	}
+
+
 
 	void RayShotgun ()
 	{
@@ -85,11 +101,18 @@ public class HandManager : MonoBehaviour
 		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 10, Color.red);
 		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit)) {
 			//Debug.Log (hit.collider.gameObject.name);
-			Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
 				EnnemieScript.Die ();
 			}
 		}
 	}
+
+	IEnumerator Reload ()
+	{
+		yield return new WaitForSeconds (ShotgunRealoadTime);
+		int_ShotGun = 2;
+	}
+		
+
 }

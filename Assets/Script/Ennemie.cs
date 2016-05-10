@@ -12,17 +12,31 @@ public class Ennemie : MonoBehaviour
 	[SerializeField]
 	LightStatus EnnemieLightStatus;
 
-	GameObject LightImIn;
+	private NavMeshAgent Agent;
+	public GameObject LightImIn;
+	private bool Follow;
+	private GameObject PlayerToFollow;
+
 
 	void Update ()
 	{
 		if (LightImIn == null) {
 			EnnemieLightStatus = LightStatus.NotInLight;
-		} else {
-			Debug.Log ("Light");
+		}
+		if (Follow) {
+			FollowUntilDED ();
 		}
 	}
 
+	void FollowUntilDED ()
+	{
+		Agent.SetDestination (PlayerToFollow.transform.position);
+	}
+
+	void Start ()
+	{
+		Agent = GetComponent<NavMeshAgent> ();
+	}
 
 	public void Die ()
 	{
@@ -46,4 +60,16 @@ public class Ennemie : MonoBehaviour
 		LightImIn = LightObject;
 	}
 
+	void OnTriggerEnter (Collider Thing)
+	{
+		if (Thing.gameObject.CompareTag ("P1")) {
+			PlayerToFollow = GameManager.Instance.Player1.gameObject;
+
+			Follow = true;
+		}
+		if (Thing.gameObject.CompareTag ("P2")) {
+			PlayerToFollow = GameManager.Instance.Player2.gameObject;
+			Follow = true;
+		}
+	}
 }
