@@ -36,6 +36,22 @@ public class PlayerScript : MonoBehaviour
 	private bool Jumping = false;
 	private bool OnGround;
 
+	enum AnimState
+	{
+		Right,
+		Left,
+		Idle,
+		Dead,
+		Dance,
+		Shooting,
+		Reloading,
+		Falling,
+		Jumping
+	}
+
+	[SerializeField]
+	private AnimState PlayerState;
+
 	void Start ()
 	{
 		Controller = GetComponent<CharacterController> ();
@@ -97,47 +113,55 @@ public class PlayerScript : MonoBehaviour
 	{
 		
 		vel = Vector3.zero;
+		PlayerState = AnimState.Idle;
 	}
 
 	void StopLeft (InputActionEventData data)
 	{
-
 		vel = Vector3.zero;
+		PlayerState = AnimState.Idle;
 	}
 
 	void MoveRight (InputActionEventData data)
 	{
 		vel = (Right * Speed);
+		PlayerState = AnimState.Right;
 	}
 
 	void MoveLeft (InputActionEventData data)
 	{
 		vel = (Left * Speed);
+		PlayerState = AnimState.Left;
 	}
 
 	void Move ()
 	{
-		
+		if (PlayerState != AnimState.Dead) {
+			vel.y = vSpeed;
+			if (!Controller.isGrounded) {
+				vSpeed -= Gravity * Time.deltaTime;
+			}
 
-		vel.y = vSpeed;
-		if (!Controller.isGrounded) {
-			vSpeed -= Gravity * Time.deltaTime;
+			vel -= Vector3.zero * 100;
+			Controller.Move (vel * Speed * Time.deltaTime);
 		}
-
-		vel -= Vector3.zero * 100;
-		Controller.Move (vel * Speed * Time.deltaTime);
-	
 	}
 
 	void GroundCheck ()
 	{
-		//Could replace isGrounded by a Raycast to have more precision. TODO if time and usage.
 		RaycastHit Hit;
 		if (Physics.Raycast (transform.position, Down, out Hit)) {
 			if (Hit.distance > 1.1f) {
 				OnGround = false;
+				if (vSpeed < 1) {
+					PlayerState = AnimState.Falling;
+				}
+
 			} else {
 				OnGround = true;
+				if (PlayerState != AnimState.Left & PlayerState == AnimState.Falling || PlayerState != AnimState.Right & PlayerState == AnimState.Falling) {
+					PlayerState = AnimState.Idle;
+				}
 			}
 		}
 		if (OnGround) {
@@ -152,6 +176,7 @@ public class PlayerScript : MonoBehaviour
 		if (OnGround) {
 			Jumping = true;
 			vSpeed = JumpPower;
+			PlayerState = AnimState.Jumping;
 		}
 	}
 
@@ -159,12 +184,40 @@ public class PlayerScript : MonoBehaviour
 	{
 		if (thing.gameObject.CompareTag ("Ennemie")) {
 			Debug.Log ("YOU DED");
+			PlayerState = AnimState.Dead;
 		}
 	}
 
-	public void PlayerIsInLight ()
+	void AnnimationManager ()
 	{
-		Debug.Log ("test");
-		this.GetComponent<Material> ().SetFloat ("Outline width", 0);
+		switch (PlayerState) {
+		case AnimState.Dance:
+
+			break;
+		case AnimState.Dead:
+
+			break;
+		case AnimState.Falling:
+
+			break;
+		case AnimState.Idle:
+
+			break;
+		case AnimState.Jumping:
+
+			break;
+		case AnimState.Left:
+
+			break;
+		case AnimState.Reloading:
+
+			break;
+		case AnimState.Right:
+
+			break;
+		case AnimState.Shooting:
+
+			break;
+		}
 	}
 }
