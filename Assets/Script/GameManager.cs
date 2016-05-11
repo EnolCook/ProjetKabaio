@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Rewired;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
+	public delegate void DeathActions ();
+
+	public static event DeathActions Death;
 
 	public GameObject Player1;
 	public GameObject Player2;
@@ -11,13 +16,23 @@ public class GameManager : Singleton<GameManager>
 	private GameObject FirstCheckPoint;
 	[SerializeField]
 	private GameObject LightPrefab;
+	[SerializeField]
+	private GameObject GameOverUI;
+	[SerializeField]
+	private GameObject DeepTextGO;
+
+	private Text TextUI;
 
 	private GameObject Checkpoint;
 	private float Deepness;
+	private Player Player1_Local;
+	public bool IHadLight = true;
 
 	void Start ()
 	{
+		Player1_Local = ReInput.players.GetPlayer (0);
 		Checkpoint = FirstCheckPoint;
+		TextUI = DeepTextGO.GetComponent<Text> ();
 		TPAtLastCheckPoint ();
 	}
 
@@ -29,8 +44,28 @@ public class GameManager : Singleton<GameManager>
 	public void OnPlayerDied ()
 	{
 		//GameOverScreen
+		if (Player1.transform.position.y < Player2.transform.position.y) {
+			Deepness = Mathf.Round (Mathf.Abs (Player1.transform.position.y)); 
+		} else if (Player2.transform.position.y < Player1.transform.position.y) {
+			Deepness = Mathf.Round (Mathf.Abs (Player2.transform.position.y)); 
+		} else if (Player1.transform.position.y == Player2.transform.position.y) {
+			Deepness = Mathf.Round (Mathf.Abs (Player1.transform.position.y)); 
+		}
 		Player1.GetComponent<PlayerScript> ().ResetPlayer ();
 		Player2.GetComponent<PlayerScript> ().ResetPlayer ();
+		TextUI.text = Deepness.ToString () + " m";
+		GameOverUI.SetActive (true);
+		Player1_Local.AddInputEventDelegate (WaitForA, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Jump");
+		Death ();
+		//TPAtLastCheckPoint ();
+	}
+
+	public void WaitForA (InputActionEventData data)
+	{
+		Player1_Local.RemoveInputEventDelegate (WaitForA, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Jump");
+		GameOverUI.SetActive (false);
+		Player1.GetComponent<PlayerScript> ().Continue ();
+		Player2.GetComponent<PlayerScript> ().Continue ();
 		TPAtLastCheckPoint ();
 	}
 
@@ -38,8 +73,12 @@ public class GameManager : Singleton<GameManager>
 	{
 		Player1.transform.position = Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Player1.transform.position;
 		Player2.transform.position = Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Player2.transform.position;
-		Instantiate (LightPrefab, Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Light.transform.position, this.transform.rotation);
-
+		if (IHadLight) {
+			Instantiate (LightPrefab, Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Light.transform.position, this.transform.rotation);
+		}
+		IHadLight = false;
 	}
+
+
 
 }

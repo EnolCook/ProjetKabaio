@@ -47,6 +47,10 @@ public class LightVSEnnemie : MonoBehaviour
 				}
 			}
 		}
+	}
 
+	void OnDisable ()
+	{
+		
 	}
 }

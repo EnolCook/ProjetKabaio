@@ -16,11 +16,15 @@ public class Ennemie : MonoBehaviour
 	public GameObject LightImIn;
 	private bool Follow;
 	private GameObject PlayerToFollow;
+	private Vector3 SpawnPosition;
 
 
 	void Update ()
 	{
 		if (LightImIn == null || LightImIn.activeSelf == false) {
+			EnnemieLightStatus = LightStatus.NotInLight;
+		}
+		if (LightImIn != null && !LightImIn.GetComponent<SphereCollider> ().enabled) {
 			EnnemieLightStatus = LightStatus.NotInLight;
 		}
 		if (Follow) {
@@ -35,12 +39,16 @@ public class Ennemie : MonoBehaviour
 
 	void Start ()
 	{
+		GameManager.Death += TPToSpawnLoc;
+
 		Agent = GetComponent<NavMeshAgent> ();
+		SpawnPosition = this.transform.position;
 	}
 
 	public void Die ()
 	{
 		if (EnnemieLightStatus == LightStatus.InLight) {
+			GameManager.Death -= TPToSpawnLoc;
 			Destroy (this.gameObject);
 		}
 	}
@@ -58,6 +66,14 @@ public class Ennemie : MonoBehaviour
 	public void SetLightYourIn (GameObject LightObject)
 	{
 		LightImIn = LightObject;
+	}
+
+	void TPToSpawnLoc ()
+	{
+		this.transform.position = SpawnPosition;
+		Agent.SetDestination (SpawnPosition);
+		PlayerToFollow = null;
+		Follow = false;
 	}
 
 	void OnTriggerEnter (Collider Thing)
