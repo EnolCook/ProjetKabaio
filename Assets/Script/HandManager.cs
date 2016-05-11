@@ -44,7 +44,7 @@ public class HandManager : MonoBehaviour
 	public void TakeLight (GameObject LightToTake)
 	{
 		InHand = Hand.Light;
-		Destroy (LightToTake);
+		LightToTake.GetComponentInChildren<LightScript> ().OnTaken (this.gameObject.transform.parent.tag);
 		SpotLight.SetActive (true);
 		Shotgun.SetActive (false);
 	}

@@ -20,7 +20,7 @@ public class Ennemie : MonoBehaviour
 
 	void Update ()
 	{
-		if (LightImIn == null) {
+		if (LightImIn == null || LightImIn.activeSelf == false) {
 			EnnemieLightStatus = LightStatus.NotInLight;
 		}
 		if (Follow) {
