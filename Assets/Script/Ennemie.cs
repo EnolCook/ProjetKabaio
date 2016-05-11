@@ -45,6 +45,7 @@ public class Ennemie : MonoBehaviour
 	public void Die ()
 	{
 		if (EnnemieLightStatus == LightStatus.InLight) {
+			GameManager.Death -= TPToSpawnLoc;
 			Destroy (this.gameObject);
 		}
 	}

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Rewired;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -17,6 +18,10 @@ public class GameManager : Singleton<GameManager>
 	private GameObject LightPrefab;
 	[SerializeField]
 	private GameObject GameOverUI;
+	[SerializeField]
+	private GameObject DeepTextGO;
+
+	private Text TextUI;
 
 	private GameObject Checkpoint;
 	private float Deepness;
@@ -27,6 +32,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		Player1_Local = ReInput.players.GetPlayer (0);
 		Checkpoint = FirstCheckPoint;
+		TextUI = DeepTextGO.GetComponent<Text> ();
 		TPAtLastCheckPoint ();
 	}
 
@@ -38,8 +44,16 @@ public class GameManager : Singleton<GameManager>
 	public void OnPlayerDied ()
 	{
 		//GameOverScreen
+		if (Player1.transform.position.y < Player2.transform.position.y) {
+			Deepness = Mathf.Round (Mathf.Abs (Player1.transform.position.y)); 
+		} else if (Player2.transform.position.y < Player1.transform.position.y) {
+			Deepness = Mathf.Round (Mathf.Abs (Player2.transform.position.y)); 
+		} else if (Player1.transform.position.y == Player2.transform.position.y) {
+			Deepness = Mathf.Round (Mathf.Abs (Player1.transform.position.y)); 
+		}
 		Player1.GetComponent<PlayerScript> ().ResetPlayer ();
 		Player2.GetComponent<PlayerScript> ().ResetPlayer ();
+		TextUI.text = Deepness.ToString () + " m";
 		GameOverUI.SetActive (true);
 		Player1_Local.AddInputEventDelegate (WaitForA, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Jump");
 		Death ();
