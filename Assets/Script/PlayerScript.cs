@@ -109,6 +109,11 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
+	public void ResetPlayer ()
+	{
+		HandMana.ResetHand ();
+	}
+
 	void StopRight (InputActionEventData data)
 	{
 		
@@ -184,6 +189,7 @@ public class PlayerScript : MonoBehaviour
 	{
 		if (thing.gameObject.CompareTag ("Ennemie")) {
 			Debug.Log ("YOU DED");
+			GameManager.Instance.OnPlayerDied ();
 			PlayerState = AnimState.Dead;
 		}
 	}
