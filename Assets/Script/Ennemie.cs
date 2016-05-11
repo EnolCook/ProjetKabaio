@@ -16,6 +16,7 @@ public class Ennemie : MonoBehaviour
 	public GameObject LightImIn;
 	private bool Follow;
 	private GameObject PlayerToFollow;
+	private Vector3 SpawnPosition;
 
 
 	void Update ()
@@ -35,7 +36,10 @@ public class Ennemie : MonoBehaviour
 
 	void Start ()
 	{
+		GameManager.Death += TPToSpawnLoc;
+
 		Agent = GetComponent<NavMeshAgent> ();
+		SpawnPosition = this.transform.position;
 	}
 
 	public void Die ()
@@ -58,6 +62,14 @@ public class Ennemie : MonoBehaviour
 	public void SetLightYourIn (GameObject LightObject)
 	{
 		LightImIn = LightObject;
+	}
+
+	void TPToSpawnLoc ()
+	{
+		this.transform.position = SpawnPosition;
+		Agent.SetDestination (SpawnPosition);
+		PlayerToFollow = null;
+		Follow = false;
 	}
 
 	void OnTriggerEnter (Collider Thing)

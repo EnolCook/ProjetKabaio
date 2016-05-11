@@ -35,6 +35,7 @@ public class PlayerScript : MonoBehaviour
 	private Vector3 vel;
 	private bool Jumping = false;
 	private bool OnGround;
+	private bool CanMove = true;
 
 	enum AnimState
 	{
@@ -76,11 +77,13 @@ public class PlayerScript : MonoBehaviour
 		LocalPlayer.AddInputEventDelegate (Action, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "ActionInput");
 	}
 
-	void Update ()
+	void FixedUpdate ()
 	{
-		GroundCheck ();
-		Move ();
-		UpdateHandPosition ();
+		if (CanMove) {
+			GroundCheck ();
+			Move ();
+			UpdateHandPosition ();
+		}
 	}
 
 	void UpdateHandPosition ()
@@ -92,26 +95,41 @@ public class PlayerScript : MonoBehaviour
 
 	void Action (InputActionEventData data)
 	{
-		HandMana.HandAction ();
+		if (CanMove) {
+			HandMana.HandAction ();
+		}
+
 	}
 
 	void TakeObject (InputActionEventData data)
 	{
-		if (LocalCanTake) {
-			if (HandMana.InHand != HandManager.Hand.Light) {
-				HandMana.TakeLight (LightToTake);
-				LocalCanTake = false;
-			}
-		} else {
-			if (HandMana.InHand == HandManager.Hand.Light) {
-				HandMana.DropLight ();
+		if (CanMove) {
+			if (LocalCanTake) {
+				if (HandMana.InHand != HandManager.Hand.Light) {
+					HandMana.TakeLight (LightToTake);
+					LocalCanTake = false;
+				}
+			} else {
+				if (HandMana.InHand == HandManager.Hand.Light) {
+					HandMana.DropLight ();
+				}
 			}
 		}
+
 	}
 
 	public void ResetPlayer ()
 	{
+		if (HandMana.InHand == HandManager.Hand.Light) {
+			GameManager.Instance.IHadLight = true;
+		}
 		HandMana.ResetHand ();
+		CanMove = false;
+	}
+
+	public void Continue ()
+	{
+		CanMove = true;
 	}
 
 	void StopRight (InputActionEventData data)
@@ -178,10 +196,12 @@ public class PlayerScript : MonoBehaviour
 
 	void Jump (InputActionEventData data)
 	{
-		if (OnGround) {
-			Jumping = true;
-			vSpeed = JumpPower;
-			PlayerState = AnimState.Jumping;
+		if (CanMove) {
+			if (OnGround) {
+				Jumping = true;
+				vSpeed = JumpPower;
+				PlayerState = AnimState.Jumping;
+			}
 		}
 	}
 
