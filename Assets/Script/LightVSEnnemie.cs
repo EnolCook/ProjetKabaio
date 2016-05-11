@@ -12,13 +12,12 @@ public class LightVSEnnemie : MonoBehaviour
 
 			RaycastHit hit;
 			//Debug.DrawRay (StartPos, Direction, Color.red, 1);
-			if (Physics.Raycast (StartPos, Direction, out hit, 1000)) {
+			if (Physics.Raycast (StartPos, Direction * 1000, out hit)) {
 				if (hit.collider.gameObject.tag == "Ennemie") {
 					Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
 					Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
 				}
 			}
-
 		}
 	}
 
@@ -39,7 +38,7 @@ public class LightVSEnnemie : MonoBehaviour
 
 			RaycastHit hit;
 			//Debug.DrawRay (StartPos, Direction, Color.red, 1);
-			if (Physics.Raycast (StartPos, Direction, out hit, 1000)) {
+			if (Physics.Raycast (StartPos, Direction * 1000, out hit)) {
 				if (hit.collider.gameObject.tag == "Ennemie") {
 					Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
 					Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
