@@ -49,6 +49,13 @@ public class HandManager : MonoBehaviour
 		Shotgun.SetActive (false);
 	}
 
+	public void ResetHand ()
+	{
+		InHand = Hand.Shotgun;
+		SpotLight.SetActive (false);
+		Shotgun.SetActive (true);
+	}
+
 	public void DropLight ()
 	{
 		InHand = Hand.Shotgun;
