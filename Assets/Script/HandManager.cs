@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class HandManager : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class HandManager : MonoBehaviour
 	private float ShotgunRealoadTime = 2;
 	[SerializeField]
 	private float LightThrowPower = 1;
+	[SerializeField]
+	private float ShotShakeDuration = 0.1f;
+	[SerializeField]
+	private float ShotShakePower = 0.2f;
 
 	private int int_ShotGun = 2;
 
@@ -39,6 +44,7 @@ public class HandManager : MonoBehaviour
 	void Start ()
 	{
 		InHand = Hand.Shotgun;
+		DOTween.Init ();
 	}
 
 	public void TakeLight (GameObject LightToTake)
@@ -124,6 +130,9 @@ public class HandManager : MonoBehaviour
 
 	void RayShotgun ()
 	{
+
+		GameManager.Instance.GameCamera.transform.DOShakePosition (ShotShakeDuration, ShotShakePower);
+
 		RaycastHit hit;
 		//Replace ShotgunPosition with muzzle position
 		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 1000, Color.red);
