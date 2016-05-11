@@ -64,6 +64,13 @@ public class HandManager : MonoBehaviour
 		Instantiate (LightPrefab, Spawnpoint.transform.position, this.transform.rotation);
 	}
 
+	public void DropLightWithNoSpawn ()
+	{
+		InHand = Hand.Shotgun;
+		SpotLight.SetActive (false);
+		Shotgun.SetActive (true);
+	}
+
 	void LaunchLight ()
 	{
 		InHand = Hand.Shotgun;

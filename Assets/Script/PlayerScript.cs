@@ -168,7 +168,6 @@ public class PlayerScript : MonoBehaviour
 			vel -= Vector3.zero * 100;
 			Controller.Move (vel * Speed * Time.deltaTime);
 		}
-		Debug.Log (vSpeed);
 	}
 
 	void GroundCheck ()
