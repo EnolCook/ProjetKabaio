@@ -161,4 +161,10 @@ public class PlayerScript : MonoBehaviour
 			Debug.Log ("YOU DED");
 		}
 	}
+
+	public void PlayerIsInLight ()
+	{
+		Debug.Log ("test");
+		this.GetComponent<Material> ().SetFloat ("Outline width", 0);
+	}
 }

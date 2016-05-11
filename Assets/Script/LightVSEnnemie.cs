@@ -18,7 +18,6 @@ public class LightVSEnnemie : MonoBehaviour
 					Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
 				}
 			}
-
 		}
 	}
 
