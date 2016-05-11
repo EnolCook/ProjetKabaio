@@ -24,6 +24,9 @@ public class Ennemie : MonoBehaviour
 		if (LightImIn == null || LightImIn.activeSelf == false) {
 			EnnemieLightStatus = LightStatus.NotInLight;
 		}
+		if (LightImIn != null && !LightImIn.GetComponent<SphereCollider> ().enabled) {
+			EnnemieLightStatus = LightStatus.NotInLight;
+		}
 		if (Follow) {
 			FollowUntilDED ();
 		}
