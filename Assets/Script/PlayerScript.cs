@@ -115,7 +115,6 @@ public class PlayerScript : MonoBehaviour
 				}
 			}
 		}
-
 	}
 
 	public void ResetPlayer ()
@@ -124,6 +123,7 @@ public class PlayerScript : MonoBehaviour
 			GameManager.Instance.IHadLight = true;
 		}
 		HandMana.ResetHand ();
+		vSpeed = 0;
 		CanMove = false;
 	}
 
@@ -168,6 +168,7 @@ public class PlayerScript : MonoBehaviour
 			vel -= Vector3.zero * 100;
 			Controller.Move (vel * Speed * Time.deltaTime);
 		}
+		Debug.Log (vSpeed);
 	}
 
 	void GroundCheck ()
@@ -184,6 +185,7 @@ public class PlayerScript : MonoBehaviour
 				OnGround = true;
 				if (PlayerState != AnimState.Left & PlayerState == AnimState.Falling || PlayerState != AnimState.Right & PlayerState == AnimState.Falling) {
 					PlayerState = AnimState.Idle;
+					vSpeed = 0;
 				}
 			}
 		}
