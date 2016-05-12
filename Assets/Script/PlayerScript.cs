@@ -62,6 +62,11 @@ public class PlayerScript : MonoBehaviour
 	private AnimState PlayerState;
 	private bool Dead = false;
 	private float TempX = 1;
+	private AudioSource PlayerAudio;
+
+	[Header ("Sounds")]
+	[SerializeField]
+	private AudioClip Walk;
 
 	void Start ()
 	{
@@ -70,11 +75,13 @@ public class PlayerScript : MonoBehaviour
 		Left = transform.TransformDirection (Vector3.left);
 		Down = transform.TransformDirection (Vector3.down) * 10;
 		HandMana = GetComponentInChildren<HandManager> ();
+		PlayerAudio = GetComponent<AudioSource> ();
 		PlayerAnimator = GetComponent<Animator> ();
 		Physics.IgnoreLayerCollision (10, 11);
 		StartCoroutine ("CheckVelocity");
 		StartCoroutine ("IdleCheck");
 	}
+
 
 	void Awake ()
 	{
@@ -191,7 +198,7 @@ public class PlayerScript : MonoBehaviour
 			vel.y = vSpeed;
 			if (!OnGround) {
 				vSpeed -= Gravity * Time.deltaTime;
-			}
+			} 
 
 			vel -= Vector3.zero * 100;
 			Controller.Move (vel * Speed * Time.deltaTime);
@@ -364,6 +371,16 @@ public class PlayerScript : MonoBehaviour
 			}
 		}
 
+	}
+
+	public void PlayAudio (AudioClip ToPlay, float Vol)
+	{
+		PlayerAudio.PlayOneShot (ToPlay, Vol);
+	}
+
+	public void StopAudio ()
+	{
+		PlayerAudio.Stop ();
 	}
 
 	void SetAnnimation (string AnimState, bool Mirror)
