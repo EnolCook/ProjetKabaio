@@ -24,6 +24,8 @@ public class HandManager : MonoBehaviour
 	[SerializeField]
 	private float ShotShakePower = 0.2f;
 	[SerializeField]
+	private GameObject MuzzleFlash;
+	[SerializeField]
 	private AudioClip Shoot;
 	[SerializeField]
 	private AudioClip ReloadSound;
@@ -149,9 +151,8 @@ public class HandManager : MonoBehaviour
 		GameManager.Instance.GameCamera.transform.DOShakePosition (ShotShakeDuration, ShotShakePower);
 
 		RaycastHit hit;
-
+		Instantiate (MuzzleFlash, Muzzle.transform.position, Muzzle.transform.rotation);
 		Vector3 AngleWork = new Vector3 (AX, AY, 0);
-		Debug.Log (AngleWork);
 		Debug.DrawRay (Muzzle.transform.position, AngleWork * 1000, Color.red, 5);
 		this.gameObject.transform.parent.GetComponent<PlayerScript> ().PlayAudio (Shoot, 1f);
 		if (Physics.Raycast (Muzzle.transform.position, -Muzzle.transform.up * 1000, out hit)) {
