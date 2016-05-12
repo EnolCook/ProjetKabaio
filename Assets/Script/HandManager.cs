@@ -100,6 +100,9 @@ public class HandManager : MonoBehaviour
 		if (InHand == Hand.Light) {
 			Vector3 Angle = new Vector3 (StickValue - 90, 0, 0);
 			TempAngle = Angle;
+			if (this.transform.parent.GetComponent<PlayerScript> ().Mirrored) {
+				Angle = new Vector3 (Angle.x, Angle.y + 180, Angle.z);
+			}
 			SpotLight.transform.localEulerAngles = Angle;
 		}
 		if (InHand == Hand.Shotgun) {
@@ -107,7 +110,6 @@ public class HandManager : MonoBehaviour
 			TempAngle = Angle;
 			if (this.transform.parent.GetComponent<PlayerScript> ().Mirrored) {
 				Angle = -Angle;
-				Muzzle.transform.eulerAngles = -Angle;
 			}
 			Shotgun.transform.localEulerAngles = Angle;
 		}
@@ -139,9 +141,9 @@ public class HandManager : MonoBehaviour
 
 		RaycastHit hit;
 
-		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 1000, Color.red);
+		Debug.DrawRay (Muzzle.transform.position, -Muzzle.transform.up * 1000, Color.red);
 
-		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit)) {
+		if (Physics.Raycast (Muzzle.transform.position, -Muzzle.transform.up * 1000, out hit)) {
 			//Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();

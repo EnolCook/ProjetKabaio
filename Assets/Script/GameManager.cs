@@ -49,6 +49,17 @@ public class GameManager : Singleton<GameManager>
 		Checkpoint = TempCheckpoint;
 	}
 
+	public void PiegePlayerDie (int ID)
+	{
+		if (ID == 1) {
+			Player1.GetComponent<PlayerScript> ().YouDie ();
+		}
+		if (ID == 2) {
+			Player2.GetComponent<PlayerScript> ().YouDie ();
+		}
+	}
+
+
 	public void OnPlayerDied ()
 	{
 		//GameOverScreen

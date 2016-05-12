@@ -52,13 +52,15 @@ public class PlayerScript : MonoBehaviour
 		Dance,
 		Shooting,
 		Reloading,
+		PickingUp,
 		Falling,
+		JumEnd,
 		Jumping
 	}
 
 	[SerializeField]
 	private AnimState PlayerState;
-
+	private bool Dead = false;
 	private float TempX = 1;
 
 	void Start ()
@@ -70,6 +72,8 @@ public class PlayerScript : MonoBehaviour
 		HandMana = GetComponentInChildren<HandManager> ();
 		PlayerAnimator = GetComponent<Animator> ();
 		Physics.IgnoreLayerCollision (10, 11);
+		StartCoroutine ("CheckVelocity");
+		StartCoroutine ("IdleCheck");
 	}
 
 	void Awake ()
@@ -87,14 +91,18 @@ public class PlayerScript : MonoBehaviour
 
 	void Update ()
 	{
+		AnnimationManager ();
 		if (CanMove) {
 			GroundCheck ();
 			Move ();
-			UpdateHandPosition ();
-			AnnimationManager ();
-				
-		
+
+
 		}
+	}
+
+	void LateUpdate ()
+	{
+		UpdateHandPosition ();
 	}
 
 	void UpdateHandPosition ()
@@ -122,6 +130,9 @@ public class PlayerScript : MonoBehaviour
 				if (HandMana.InHand != HandManager.Hand.Light) {
 					HandMana.TakeLight (LightToTake);
 					LocalCanTake = false;
+					PlayerState = AnimState.PickingUp;
+					StartCoroutine ("PickedUp");
+
 				}
 			} else {
 				if (HandMana.InHand == HandManager.Hand.Light) {
@@ -144,20 +155,21 @@ public class PlayerScript : MonoBehaviour
 	public void Continue ()
 	{
 		CanMove = true;
+		Dead = false;
+		PlayerState = AnimState.Idle;
 	}
 
 	void StopRight (InputActionEventData data)
 	{
 		
 		vel = Vector3.zero;
-		StartCoroutine ("IdleCheck");
+
 		//PlayerState = AnimState.Idle;
 	}
 
 	void StopLeft (InputActionEventData data)
 	{
 		vel = Vector3.zero;
-		StartCoroutine ("IdleCheck");
 		//PlayerState = AnimState.Idle;
 	}
 
@@ -177,7 +189,7 @@ public class PlayerScript : MonoBehaviour
 	{
 		if (PlayerState != AnimState.Dead) {
 			vel.y = vSpeed;
-			if (!Controller.isGrounded) {
+			if (!OnGround) {
 				vSpeed -= Gravity * Time.deltaTime;
 			}
 
@@ -193,13 +205,19 @@ public class PlayerScript : MonoBehaviour
 			if (Hit.distance > 1.1f) {
 				OnGround = false;
 				if (vSpeed < 1) {
-					PlayerState = AnimState.Falling;
+					if (Hit.distance < 2.4f && Hit.distance > 1.6f) {
+						PlayerState = AnimState.JumEnd;
+						vel = Vector3.zero;
+					} else {
+						PlayerState = AnimState.Falling;
+					}
 				}
 
 			} else {
 				OnGround = true;
-				if (PlayerState != AnimState.Left & PlayerState == AnimState.Falling || PlayerState != AnimState.Right & PlayerState == AnimState.Falling) {
+				if (PlayerState == AnimState.Falling || PlayerState == AnimState.Falling) {
 					PlayerState = AnimState.Idle;
+					vel = Vector3.zero;
 					vSpeed = 0;
 				}
 			}
@@ -225,65 +243,127 @@ public class PlayerScript : MonoBehaviour
 	void OnCollisionEnter (Collision thing)
 	{
 		if (thing.gameObject.CompareTag ("Ennemie")) {
-			Debug.Log ("YOU DED");
-			GameManager.Instance.OnPlayerDied ();
-			PlayerState = AnimState.Dead;
+			YouDie ();
 		}
+	}
+
+	public void YouDie ()
+	{
+		Debug.Log ("YOU DED");
+		PlayerState = AnimState.Dead;
+		Dead = true;
+		GameManager.Instance.OnPlayerDied ();
 	}
 
 	IEnumerator IdleCheck ()
 	{
-		yield return new WaitForSeconds (0.1f);
-		if (vel == Vector3.zero) {
-			PlayerState = AnimState.Idle;
+		while (true) {
+			yield return new WaitForSeconds (0.1f);
+			if (vel == Vector3.zero) {
+				PlayerState = AnimState.Idle;
+			}
 		}
+
+	}
+
+	IEnumerator CheckVelocity ()
+	{
+		while (true) {
+			Vector3 TempVel;
+			TempVel = vel;
+			yield return new WaitForSeconds (0.4f);
+			if (vel == TempVel) {
+				vSpeed = 0;
+			}
+		}
+	}
+
+
+	IEnumerator PickedUp ()
+	{
+		yield return new WaitForSeconds (0.2f);
+		PlayerState = AnimState.Idle;
 	}
 
 
 	void AnnimationManager ()
 	{
-		switch (PlayerState) {
-		case AnimState.Dance:
-
-			break;
-		case AnimState.Dead:
-
-			break;
-		case AnimState.Falling:
-
-			break;
-		case AnimState.Idle:
+		if (Dead) {
 			if (TempX > 0) {
-				SetAnnimation ("b_Idle", false);
+				SetAnnimation ("b_DeathFront", false);
 			} else if (TempX < 0) {
-				SetAnnimation ("b_Idle", true);
+				SetAnnimation ("b_DeathFront", true);
 			}
-			break;
-		case AnimState.Jumping:
+		} else {
+			switch (PlayerState) {
+			case AnimState.Dance:
 
-			break;
-		case AnimState.Left:
-			if (TempX > 0) {
-				SetAnnimation ("b_WalkBackward", false);
-			} else if (TempX < 0) {
-				SetAnnimation ("b_Walkforward", true);
+				break;
+			case AnimState.Dead:
+				if (TempX > 0) {
+					SetAnnimation ("b_DeathFront", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_DeathFront", true);
+				}
+				break;
+			case AnimState.Falling:
+				if (TempX > 0) {
+					SetAnnimation ("b_Fall", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_Fall", true);
+				}
+				break;
+			case AnimState.Idle:
+				if (TempX > 0) {
+					SetAnnimation ("b_Idle", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_Idle", true);
+				}
+				break;
+			case AnimState.Jumping:
+				if (TempX > 0) {
+					SetAnnimation ("b_JumpUp", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_JumpUp", true);
+				}
+				break;
+			case AnimState.Left:
+				if (TempX > 0) {
+					SetAnnimation ("b_WalkBackward", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_Walkforward", true);
+				}
+				break;
+			case AnimState.Reloading:
+
+				break;
+			case AnimState.Right:
+				if (TempX > 0) {
+					SetAnnimation ("b_Walkforward", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_WalkBackward", true);
+				}
+				break;
+			case AnimState.Shooting:
+
+				break;
+			case AnimState.PickingUp:
+				if (TempX > 0) {
+					SetAnnimation ("b_Pickup", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_Pickup", true);
+				}
+				break;
+			case AnimState.JumEnd:
+				if (TempX > 0) {
+					SetAnnimation ("b_JumpEnd", false);
+				} else if (TempX < 0) {
+					SetAnnimation ("b_JumpEnd", true);
+				}
+				break;
 			}
-			break;
-		case AnimState.Reloading:
-
-			break;
-		case AnimState.Right:
-			if (TempX > 0) {
-				SetAnnimation ("b_Walkforward", false);
-			} else if (TempX < 0) {
-				SetAnnimation ("b_WalkBackward", true);
-			}
-
-			break;
-		case AnimState.Shooting:
-
-			break;
 		}
+
 	}
 
 	void SetAnnimation (string AnimState, bool Mirror)
@@ -294,12 +374,14 @@ public class PlayerScript : MonoBehaviour
 			} else {
 				if (!Mirror) {
 					PlayerAnimator.SetBool (AnimState, true);
-					this.gameObject.transform.localScale = new Vector3 (1f, 1f, 1f);
+					//this.gameObject.transform.localScale = new Vector3 (1f, 1f, 1f);
+					this.gameObject.transform.rotation = (new Quaternion (0, 0, 0, 0));
 					Mirrored = false;
 				} else {
 					PlayerAnimator.SetBool (AnimState, true);
 					Mirrored = true;
-					this.gameObject.transform.localScale = new Vector3 (-1f, 1f, 1f);
+					this.gameObject.transform.rotation = (new Quaternion (0, 180, 0, 0));
+					//this.gameObject.transform.localScale = new Vector3 (-1f, 1f, 1f);
 				}
 
 	

@@ -71,6 +71,7 @@ public class Ennemie : MonoBehaviour
 		LightImIn = LightObject;
 	}
 
+
 	void TPToSpawnLoc ()
 	{
 		this.transform.position = SpawnPosition;
