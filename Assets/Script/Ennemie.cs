@@ -18,8 +18,6 @@ public class Ennemie : MonoBehaviour
 	}
 
 	[SerializeField]
-	GameObject FX;
-	[SerializeField]
 	LightStatus EnnemieLightStatus;
 
 	[SerializeField]

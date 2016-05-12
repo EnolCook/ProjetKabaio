@@ -16,6 +16,8 @@ public class HandManager : MonoBehaviour
 	[SerializeField]
 	private GameObject Muzzle;
 	[SerializeField]
+	private GameObject Blood;
+	[SerializeField]
 	private float ShotgunRealoadTime = 2;
 	[SerializeField]
 	private float LightThrowPower = 1;
@@ -159,6 +161,7 @@ public class HandManager : MonoBehaviour
 			//Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
+				Instantiate (Blood, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
 				EnnemieScript.Die ();
 			}
 		}
