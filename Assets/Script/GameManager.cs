@@ -2,6 +2,7 @@
 using System.Collections;
 using Rewired;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -20,6 +21,12 @@ public class GameManager : Singleton<GameManager>
 	private GameObject GameOverUI;
 	[SerializeField]
 	private GameObject DeepTextGO;
+	[SerializeField]
+	private float DeathShakeDuration = 0.8f;
+	[SerializeField]
+	private float DeathShakePower = 0.5f;
+
+	public GameObject GameCamera;
 
 	private Text TextUI;
 
@@ -34,6 +41,7 @@ public class GameManager : Singleton<GameManager>
 		Checkpoint = FirstCheckPoint;
 		TextUI = DeepTextGO.GetComponent<Text> ();
 		TPAtLastCheckPoint ();
+		DOTween.Init ();
 	}
 
 	public void SetCheckpoint (GameObject TempCheckpoint)
@@ -51,6 +59,7 @@ public class GameManager : Singleton<GameManager>
 		} else if (Player1.transform.position.y == Player2.transform.position.y) {
 			Deepness = Mathf.Round (Mathf.Abs (Player1.transform.position.y)); 
 		}
+		GameCamera.transform.DOShakePosition (DeathShakeDuration, DeathShakePower);
 		Player1.GetComponent<PlayerScript> ().ResetPlayer ();
 		Player2.GetComponent<PlayerScript> ().ResetPlayer ();
 		TextUI.text = Deepness.ToString () + " m";

@@ -77,7 +77,7 @@ public class PlayerScript : MonoBehaviour
 		LocalPlayer.AddInputEventDelegate (Action, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "ActionInput");
 	}
 
-	void FixedUpdate ()
+	void Update ()
 	{
 		if (CanMove) {
 			GroundCheck ();
