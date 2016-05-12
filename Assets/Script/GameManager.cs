@@ -93,7 +93,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		Player1.transform.position = Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Player1.transform.position;
 		Player2.transform.position = Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Player2.transform.position;
-		if (IHadLight) {
+		if (IHadLight || Checkpoint.GetComponent<Checkpoint> ().ForceLight) {
 			Instantiate (LightPrefab, Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Light.transform.position, this.transform.rotation);
 		}
 		IHadLight = false;

@@ -11,6 +11,8 @@ public class Checkpoint : MonoBehaviour
 	[SerializeField]
 	public GameObject SpawnPoint_Light;
 
+	public bool ForceLight = false;
+
 	void OnTriggerEnter (Collider Thing)
 	{
 		if (Thing.tag == "P1" || Thing.tag == "P2") {
