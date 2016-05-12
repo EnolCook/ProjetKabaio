@@ -37,7 +37,7 @@ public class LightVSEnnemie : MonoBehaviour
 			Vector3 Direction = Thing.transform.position - this.gameObject.transform.position;
 
 			RaycastHit hit;
-			//Debug.DrawRay (StartPos, Direction, Color.red, 1);
+			Debug.DrawRay (StartPos, Direction, Color.red, 1);
 			if (Physics.Raycast (StartPos, Direction * 1000, out hit)) {
 				if (hit.collider.gameObject.tag == "Ennemie") {
 					Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
