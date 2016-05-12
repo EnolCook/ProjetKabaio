@@ -36,6 +36,12 @@ public class PlayerScript : MonoBehaviour
 	private bool Jumping = false;
 	private bool OnGround;
 	private bool CanMove = true;
+	public bool Mirrored = false;
+	private Animator PlayerAnimator;
+
+	[Header ("Animation")]
+	[SerializeField]
+	private string[] AnimBools;
 
 	enum AnimState
 	{
@@ -53,6 +59,8 @@ public class PlayerScript : MonoBehaviour
 	[SerializeField]
 	private AnimState PlayerState;
 
+	private float TempX = 1;
+
 	void Start ()
 	{
 		Controller = GetComponent<CharacterController> ();
@@ -60,7 +68,7 @@ public class PlayerScript : MonoBehaviour
 		Left = transform.TransformDirection (Vector3.left);
 		Down = transform.TransformDirection (Vector3.down) * 10;
 		HandMana = GetComponentInChildren<HandManager> ();
-
+		PlayerAnimator = GetComponent<Animator> ();
 		Physics.IgnoreLayerCollision (10, 11);
 	}
 
@@ -83,6 +91,9 @@ public class PlayerScript : MonoBehaviour
 			GroundCheck ();
 			Move ();
 			UpdateHandPosition ();
+			AnnimationManager ();
+				
+		
 		}
 	}
 
@@ -90,6 +101,9 @@ public class PlayerScript : MonoBehaviour
 	{
 		float LookX = LocalPlayer.GetAxis ("LookX");
 		float LookY = LocalPlayer.GetAxis ("LookY");
+		if (LookX != 0) {
+			TempX = LookX;
+		}
 		HandMana.InputWork (LookX, LookY);
 	}
 
@@ -136,13 +150,15 @@ public class PlayerScript : MonoBehaviour
 	{
 		
 		vel = Vector3.zero;
-		PlayerState = AnimState.Idle;
+		StartCoroutine ("IdleCheck");
+		//PlayerState = AnimState.Idle;
 	}
 
 	void StopLeft (InputActionEventData data)
 	{
 		vel = Vector3.zero;
-		PlayerState = AnimState.Idle;
+		StartCoroutine ("IdleCheck");
+		//PlayerState = AnimState.Idle;
 	}
 
 	void MoveRight (InputActionEventData data)
@@ -215,6 +231,15 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
+	IEnumerator IdleCheck ()
+	{
+		yield return new WaitForSeconds (0.1f);
+		if (vel == Vector3.zero) {
+			PlayerState = AnimState.Idle;
+		}
+	}
+
+
 	void AnnimationManager ()
 	{
 		switch (PlayerState) {
@@ -228,23 +253,57 @@ public class PlayerScript : MonoBehaviour
 
 			break;
 		case AnimState.Idle:
-
+			if (TempX > 0) {
+				SetAnnimation ("b_Idle", false);
+			} else if (TempX < 0) {
+				SetAnnimation ("b_Idle", true);
+			}
 			break;
 		case AnimState.Jumping:
 
 			break;
 		case AnimState.Left:
-
+			if (TempX > 0) {
+				SetAnnimation ("b_WalkBackward", false);
+			} else if (TempX < 0) {
+				SetAnnimation ("b_Walkforward", true);
+			}
 			break;
 		case AnimState.Reloading:
 
 			break;
 		case AnimState.Right:
+			if (TempX > 0) {
+				SetAnnimation ("b_Walkforward", false);
+			} else if (TempX < 0) {
+				SetAnnimation ("b_WalkBackward", true);
+			}
 
 			break;
 		case AnimState.Shooting:
 
 			break;
+		}
+	}
+
+	void SetAnnimation (string AnimState, bool Mirror)
+	{
+		foreach (string ST in AnimBools) {
+			if (ST != AnimState) {
+				PlayerAnimator.SetBool (ST, false);
+			} else {
+				if (!Mirror) {
+					PlayerAnimator.SetBool (AnimState, true);
+					this.gameObject.transform.localScale = new Vector3 (1f, 1f, 1f);
+					Mirrored = false;
+				} else {
+					PlayerAnimator.SetBool (AnimState, true);
+					Mirrored = true;
+					this.gameObject.transform.localScale = new Vector3 (-1f, 1f, 1f);
+				}
+
+	
+			}
 		}
 	}
 }

@@ -105,6 +105,10 @@ public class HandManager : MonoBehaviour
 		if (InHand == Hand.Shotgun) {
 			Vector3 Angle = new Vector3 (0, 0, -StickValue);
 			TempAngle = Angle;
+			if (this.transform.parent.GetComponent<PlayerScript> ().Mirrored) {
+				Angle = -Angle;
+				Muzzle.transform.eulerAngles = -Angle;
+			}
 			Shotgun.transform.localEulerAngles = Angle;
 		}
 	}
@@ -134,7 +138,7 @@ public class HandManager : MonoBehaviour
 		GameManager.Instance.GameCamera.transform.DOShakePosition (ShotShakeDuration, ShotShakePower);
 
 		RaycastHit hit;
-		//Replace ShotgunPosition with muzzle position
+
 		Debug.DrawRay (Muzzle.transform.position, Muzzle.transform.up * 1000, Color.red);
 
 		if (Physics.Raycast (Muzzle.transform.position, Muzzle.transform.up * 1000, out hit)) {
