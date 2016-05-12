@@ -18,6 +18,8 @@ public class Ennemie : MonoBehaviour
 	}
 
 	[SerializeField]
+	private GameObject Debug;
+	[SerializeField]
 	LightStatus EnnemieLightStatus;
 
 	[SerializeField]
@@ -83,6 +85,7 @@ public class Ennemie : MonoBehaviour
 			Dead = true;
 			Agent.Stop ();
 			this.GetComponent<CapsuleCollider> ().enabled = false;
+			Debug.GetComponent<BoxCollider> ().enabled = false;
 			ZombieLocalStatus = ZombieStatus.Die;
 			StartCoroutine ("DieTemp");
 		}
