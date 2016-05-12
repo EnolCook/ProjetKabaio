@@ -14,7 +14,6 @@ public class LightVSEnnemie : MonoBehaviour
 			//Debug.DrawRay (StartPos, Direction, Color.red, 1);
 			if (Physics.Raycast (StartPos, Direction * 1000, out hit)) {
 				if (hit.collider.gameObject.CompareTag ("Ennemie") && hit.collider.gameObject.tag != "Debug") {
-					Debug.Log (hit.collider.gameObject.name);
 					if (Thing.gameObject.GetComponent<Ennemie> () != null) {
 						Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
 						Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
@@ -43,7 +42,7 @@ public class LightVSEnnemie : MonoBehaviour
 			Vector3 Direction = Thing.transform.position - this.gameObject.transform.position;
 
 			RaycastHit hit;
-			Debug.DrawRay (StartPos, Direction, Color.red, 1);
+			//Debug.DrawRay (StartPos, Direction, Color.red, 1);
 			if (Physics.Raycast (StartPos, Direction * 1000, out hit)) {
 				
 				if (hit.collider.gameObject.tag == "Ennemie") {
