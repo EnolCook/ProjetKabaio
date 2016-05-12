@@ -13,9 +13,13 @@ public class LightVSEnnemie : MonoBehaviour
 			RaycastHit hit;
 			//Debug.DrawRay (StartPos, Direction, Color.red, 1);
 			if (Physics.Raycast (StartPos, Direction * 1000, out hit)) {
-				if (hit.collider.gameObject.tag == "Ennemie") {
-					Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
-					Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
+				if (hit.collider.gameObject.CompareTag ("Ennemie") && hit.collider.gameObject.tag != "Debug") {
+					Debug.Log (hit.collider.gameObject.name);
+					if (Thing.gameObject.GetComponent<Ennemie> () != null) {
+						Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
+						Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
+					}
+
 				}
 			}
 		}
@@ -23,9 +27,11 @@ public class LightVSEnnemie : MonoBehaviour
 
 	void OnTriggerExit (Collider Thing)
 	{
-		if (Thing.gameObject.CompareTag ("Ennemie")) {
-			Thing.gameObject.GetComponent<Ennemie> ().IsNotInLight ();
-			Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (null);
+		if (Thing.gameObject.CompareTag ("Ennemie") && !Thing.gameObject.CompareTag ("Debug")) {
+			if (Thing.gameObject.GetComponent<Ennemie> () != null) {
+				Thing.gameObject.GetComponent<Ennemie> ().IsNotInLight ();
+				Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (null);
+			}
 		}
 	}
 
@@ -39,18 +45,17 @@ public class LightVSEnnemie : MonoBehaviour
 			RaycastHit hit;
 			Debug.DrawRay (StartPos, Direction, Color.red, 1);
 			if (Physics.Raycast (StartPos, Direction * 1000, out hit)) {
+				
 				if (hit.collider.gameObject.tag == "Ennemie") {
-					Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
-					Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
-				} else {
+					if (Thing.gameObject.GetComponent<Ennemie> () != null) {
+						Thing.gameObject.GetComponent<Ennemie> ().IsInLight ();
+						Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
+					}
+				} else if (Thing.gameObject.tag != "Debug") {
 					Thing.gameObject.GetComponent<Ennemie> ().IsNotInLight ();
+
 				}
 			}
 		}
-	}
-
-	void OnDisable ()
-	{
-		
 	}
 }
