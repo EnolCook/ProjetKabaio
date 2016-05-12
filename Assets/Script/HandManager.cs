@@ -31,6 +31,8 @@ public class HandManager : MonoBehaviour
 	private AudioClip Shoot;
 	[SerializeField]
 	private AudioClip ReloadSound;
+	[SerializeField]
+	private AudioClip PickUp;
 
 	private int int_ShotGun = 2;
 
@@ -58,6 +60,7 @@ public class HandManager : MonoBehaviour
 
 	public void TakeLight (GameObject LightToTake)
 	{
+		this.gameObject.transform.parent.GetComponent<PlayerScript> ().PlayAudio (PickUp, 1f);
 		InHand = Hand.Light;
 		LightToTake.GetComponentInChildren<LightScript> ().OnTaken (this.gameObject.transform.parent.tag);
 		SpotLight.SetActive (true);
