@@ -255,7 +255,7 @@ public class PlayerScript : MonoBehaviour
 
 	public void YouDie ()
 	{
-		Debug.Log ("YOU DED");
+		//Debug.Log ("YOU DED");
 		PlayerState = AnimState.Dead;
 		Dead = true;
 		GameManager.Instance.OnPlayerDied ();
