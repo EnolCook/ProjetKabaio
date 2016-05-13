@@ -51,8 +51,9 @@ public class LightVSEnnemie : MonoBehaviour
 						Thing.gameObject.GetComponent<Ennemie> ().SetLightYourIn (this.gameObject);
 					}
 				} else if (Thing.gameObject.tag != "Debug") {
-					Thing.gameObject.GetComponent<Ennemie> ().IsNotInLight ();
-
+					if (Thing.gameObject.GetComponent<Ennemie> () != null) {
+						Thing.gameObject.GetComponent<Ennemie> ().IsNotInLight ();
+					}
 				}
 			}
 		}

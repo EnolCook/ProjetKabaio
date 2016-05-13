@@ -33,6 +33,9 @@ public class Ennemie : MonoBehaviour
 	private bool Dead;
 	private Animator ZombieAnimator;
 
+
+	[SerializeField]
+	private float DistanceNoSound = 10;
 	[SerializeField]
 	private string[] BoolList;
 
@@ -62,6 +65,13 @@ public class Ennemie : MonoBehaviour
 		if (this.Agent.velocity == Vector3.zero) {
 			ZombieLocalStatus = ZombieStatus.Idle;
 		}
+		if (PlayerToFollow != null) {
+			float dist = Vector3.Distance (PlayerToFollow.gameObject.transform.position, this.gameObject.transform.position);
+			if (dist > DistanceNoSound) {
+				StopAudio ();
+			}	
+		}
+
 	}
 
 	void FollowUntilDED ()
