@@ -38,10 +38,12 @@ public class MenuManager : MonoBehaviour
 
 	void StartGame (InputActionEventData data)
 	{
+		if (MState == MenuState.Main) {
+			MState = MenuState.HowTo;
+			GO_MainMenu.SetActive (false);
+			GO_HowToPlay.SetActive (true);
+		}
 
-		MState = MenuState.HowTo;
-		GO_MainMenu.SetActive (false);
-		GO_HowToPlay.SetActive (true);
 	}
 
 	void StartGameForReal (InputActionEventData data)
