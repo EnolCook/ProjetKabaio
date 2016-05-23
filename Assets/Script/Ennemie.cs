@@ -3,6 +3,15 @@ using System.Collections;
 
 public class Ennemie : MonoBehaviour
 {
+	[Header ("Boss Setup")]
+	[SerializeField]
+	[Tooltip ("This is to activate only if this unit is a boss")]
+	private bool IsBoss = false;
+	[SerializeField]
+	[Tooltip ("This is the number of shot needed to kill the boss")]
+	private int Health;
+	private bool BossDead = false;
+
 	public enum LightStatus
 	{
 		InLight,
@@ -98,15 +107,32 @@ public class Ennemie : MonoBehaviour
 	public void Die ()
 	{
 		if (EnnemieLightStatus == LightStatus.InLight) {
-			Dead = true;
-			Agent.Stop ();
-			this.GetComponent<CapsuleCollider> ().enabled = false;
-			GO_Debug.GetComponent<BoxCollider> ().enabled = false;
-			ZombieLocalStatus = ZombieStatus.Die;
-			StopAudio ();
-			PlayAudio (Death, 1f);
-			StartCoroutine ("DieTemp");
 
+			if (!IsBoss) {
+				Dead = true;
+				Agent.Stop ();
+				this.GetComponent<CapsuleCollider> ().enabled = false;
+				GO_Debug.GetComponent<BoxCollider> ().enabled = false;
+				ZombieLocalStatus = ZombieStatus.Die;
+				StopAudio ();
+				PlayAudio (Death, 1f);
+				StartCoroutine ("DieTemp");
+			}
+			if (IsBoss) {
+				if (Health > 0) {
+					Health--;
+				}
+				if (Health == 0) {
+					Dead = true;
+					Agent.Stop ();
+					this.GetComponent<CapsuleCollider> ().enabled = false;
+					GO_Debug.GetComponent<BoxCollider> ().enabled = false;
+					ZombieLocalStatus = ZombieStatus.Die;
+					StopAudio ();
+					PlayAudio (Death, 1f);
+					StartCoroutine ("DieTemp");
+				}
+			}
 		}
 	}
 
