@@ -4,11 +4,8 @@ using System.Collections;
 public class Checkpoint : MonoBehaviour
 {
 
-	[SerializeField]
 	public GameObject SpawnPoint_Player1;
-	[SerializeField]
 	public GameObject SpawnPoint_Player2;
-	[SerializeField]
 	public GameObject SpawnPoint_Light;
 
 	public bool ForceLight = false;
