@@ -164,7 +164,10 @@ public class HandManager : MonoBehaviour
 			//Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
-				Instantiate (Blood, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
+				if (EnnemieScript.EnnemieLightStatus = Ennemie.LightStatus.InLight) {
+					Instantiate (Blood, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
+				}
+
 				EnnemieScript.Die ();
 			}
 		}

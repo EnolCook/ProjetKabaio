@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Ennemie : MonoBehaviour
 {
-	enum LightStatus
+	public enum LightStatus
 	{
 		InLight,
 		NotInLight
@@ -19,11 +19,11 @@ public class Ennemie : MonoBehaviour
 
 	[SerializeField]
 	private GameObject Debug;
-	[SerializeField]
-	LightStatus EnnemieLightStatus;
 
-	[SerializeField]
-	ZombieStatus ZombieLocalStatus;
+	public LightStatus EnnemieLightStatus;
+
+
+	public ZombieStatus ZombieLocalStatus;
 
 	private NavMeshAgent Agent;
 	public GameObject LightImIn;
