@@ -102,8 +102,6 @@ public class PlayerScript : MonoBehaviour
 		if (CanMove) {
 			GroundCheck ();
 			Move ();
-
-
 		}
 	}
 
@@ -170,13 +168,14 @@ public class PlayerScript : MonoBehaviour
 	{
 		
 		vel = Vector3.zero;
-
+		InstantIdleCheck ();
 		//PlayerState = AnimState.Idle;
 	}
 
 	void StopLeft (InputActionEventData data)
 	{
 		vel = Vector3.zero;
+		InstantIdleCheck ();
 		//PlayerState = AnimState.Idle;
 	}
 
@@ -214,7 +213,7 @@ public class PlayerScript : MonoBehaviour
 				if (vSpeed < 1) {
 					if (Hit.distance < 2.4f && Hit.distance > 1.6f) {
 						PlayerState = AnimState.JumEnd;
-						vel = Vector3.zero;
+						//vel = Vector3.zero;
 					} else {
 						PlayerState = AnimState.Falling;
 					}
@@ -256,7 +255,7 @@ public class PlayerScript : MonoBehaviour
 
 	public void YouDie ()
 	{
-		Debug.Log ("YOU DED");
+		//Debug.Log ("YOU DED");
 		PlayerState = AnimState.Dead;
 		Dead = true;
 		GameManager.Instance.OnPlayerDied ();
@@ -270,7 +269,14 @@ public class PlayerScript : MonoBehaviour
 				PlayerState = AnimState.Idle;
 			}
 		}
+	}
 
+	void InstantIdleCheck ()
+	{
+		
+		if (vel == Vector3.zero) {
+			PlayerState = AnimState.Idle;
+		}
 	}
 
 	IEnumerator CheckVelocity ()
