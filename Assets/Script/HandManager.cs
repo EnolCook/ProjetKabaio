@@ -36,6 +36,7 @@ public class HandManager : MonoBehaviour
 	[SerializeField]
 	private AudioClip PickUp;
 
+
 	private int int_ShotGun = 2;
 
 	private float AX;

@@ -33,13 +33,12 @@ public class Ennemie : MonoBehaviour
 	private bool Dead;
 	private Animator ZombieAnimator;
 
-
+	[SerializeField]
+	private float AttackSoundDistance;
 	[SerializeField]
 	private float DistanceNoSound = 10;
 	[SerializeField]
 	private string[] BoolList;
-	[SerializeField]
-	private float AttackSoundDistance;
 	private AudioSource ZombieAudio;
 	[SerializeField]
 	private AudioClip Death;
@@ -105,7 +104,7 @@ public class Ennemie : MonoBehaviour
 			GO_Debug.GetComponent<BoxCollider> ().enabled = false;
 			ZombieLocalStatus = ZombieStatus.Die;
 			StopAudio ();
-			PlayAudio (Death, 1.5f);
+			PlayAudio (Death, 1f);
 			StartCoroutine ("DieTemp");
 
 		}
@@ -207,8 +206,8 @@ public class Ennemie : MonoBehaviour
 
 	IEnumerator DieTemp ()
 	{
-		yield return new WaitForSeconds (2);
 		GameManager.Death -= TPToSpawnLoc;
+		yield return new WaitForSeconds (10);
 		Destroy (this.gameObject);
 	}
 }
