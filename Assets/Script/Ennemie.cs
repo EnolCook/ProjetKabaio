@@ -9,7 +9,7 @@ public class Ennemie : MonoBehaviour
 		NotInLight
 	}
 
-	enum ZombieStatus
+	public enum ZombieStatus
 	{
 		Idle,
 		Run,
