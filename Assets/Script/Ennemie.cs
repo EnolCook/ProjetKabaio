@@ -71,7 +71,6 @@ public class Ennemie : MonoBehaviour
 		if (PlayerToFollow != null) {
 
 			dist = Vector3.Distance (PlayerToFollow.gameObject.transform.position, this.gameObject.transform.position);
-			Debug.Log (dist);
 			if (dist > DistanceNoSound) {
 				StopAudio ();
 			}
