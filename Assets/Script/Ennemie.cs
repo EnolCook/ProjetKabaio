@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Ennemie : MonoBehaviour
 {
-	enum LightStatus
+	public enum LightStatus
 	{
 		InLight,
 		NotInLight
 	}
 
-	enum ZombieStatus
+	public enum ZombieStatus
 	{
 		Idle,
 		Run,
@@ -18,12 +18,12 @@ public class Ennemie : MonoBehaviour
 	}
 
 	[SerializeField]
-	private GameObject Debug;
-	[SerializeField]
-	LightStatus EnnemieLightStatus;
+	private GameObject GO_Debug;
 
-	[SerializeField]
-	ZombieStatus ZombieLocalStatus;
+	public LightStatus EnnemieLightStatus;
+
+
+	public ZombieStatus ZombieLocalStatus;
 
 	private NavMeshAgent Agent;
 	public GameObject LightImIn;
@@ -33,12 +33,12 @@ public class Ennemie : MonoBehaviour
 	private bool Dead;
 	private Animator ZombieAnimator;
 
-
+	[SerializeField]
+	private float AttackSoundDistance;
 	[SerializeField]
 	private float DistanceNoSound = 10;
 	[SerializeField]
 	private string[] BoolList;
-
 	private AudioSource ZombieAudio;
 	[SerializeField]
 	private AudioClip Death;
@@ -46,6 +46,8 @@ public class Ennemie : MonoBehaviour
 	private AudioClip Walk;
 	[SerializeField]
 	private AudioClip[] Cri;
+
+	private float dist;
 
 	void Update ()
 	{
@@ -66,10 +68,14 @@ public class Ennemie : MonoBehaviour
 			ZombieLocalStatus = ZombieStatus.Idle;
 		}
 		if (PlayerToFollow != null) {
-			float dist = Vector3.Distance (PlayerToFollow.gameObject.transform.position, this.gameObject.transform.position);
+
+			dist = Vector3.Distance (PlayerToFollow.gameObject.transform.position, this.gameObject.transform.position);
 			if (dist > DistanceNoSound) {
 				StopAudio ();
-			}	
+			}
+			if (dist < AttackSoundDistance) {
+				ZombieLocalStatus = ZombieStatus.Attack;
+			}
 		}
 
 	}
@@ -95,9 +101,12 @@ public class Ennemie : MonoBehaviour
 			Dead = true;
 			Agent.Stop ();
 			this.GetComponent<CapsuleCollider> ().enabled = false;
-			Debug.GetComponent<BoxCollider> ().enabled = false;
+			GO_Debug.GetComponent<BoxCollider> ().enabled = false;
 			ZombieLocalStatus = ZombieStatus.Die;
+			StopAudio ();
+			PlayAudio (Death, 1f);
 			StartCoroutine ("DieTemp");
+
 		}
 	}
 
@@ -131,15 +140,16 @@ public class Ennemie : MonoBehaviour
 	{
 		
 		if (Thing.gameObject.CompareTag ("P1")) {
+			PlayAudio (Cri [0], 1);
 			PlayerToFollow = GameManager.Instance.Player1.gameObject;
 			Follow = true;
 
-			PlayAudio (Cri [0], 1);
 		}
 		if (Thing.gameObject.CompareTag ("P2")) {
+			PlayAudio (Cri [0], 1);
 			PlayerToFollow = GameManager.Instance.Player2.gameObject;
 			Follow = true;
-			PlayAudio (Cri [1], 1);
+
 		}
 	}
 
@@ -147,12 +157,11 @@ public class Ennemie : MonoBehaviour
 	{
 		if (Dead) {
 			SetAnnimation ("bz_Die");
-			StopAudio ();
-			PlayAudio (Death, 1.5f);
 		} else {
 			switch (ZombieLocalStatus) {
 			case ZombieStatus.Attack:
 				SetAnnimation ("bz_Attack");
+				PlayAudio (Cri [1], 1);
 				break;
 			case ZombieStatus.Die:
 				PlayAudio (Death, 1.5f);
@@ -162,7 +171,9 @@ public class Ennemie : MonoBehaviour
 				SetAnnimation ("bz_Idle");
 				break;
 			case ZombieStatus.Run:
-				PlayAudio (Walk, 0.8f);
+				if (dist < DistanceNoSound) {
+					PlayAudio (Walk, 0.8f);
+				}
 				SetAnnimation ("bz_Run");
 				break;
 			}
@@ -195,8 +206,8 @@ public class Ennemie : MonoBehaviour
 
 	IEnumerator DieTemp ()
 	{
-		yield return new WaitForSeconds (2);
 		GameManager.Death -= TPToSpawnLoc;
+		yield return new WaitForSeconds (10);
 		Destroy (this.gameObject);
 	}
 }

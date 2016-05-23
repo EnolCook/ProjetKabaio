@@ -28,11 +28,14 @@ public class HandManager : MonoBehaviour
 	[SerializeField]
 	private GameObject MuzzleFlash;
 	[SerializeField]
+	private GameObject GunTrail;
+	[SerializeField]
 	private AudioClip Shoot;
 	[SerializeField]
 	private AudioClip ReloadSound;
 	[SerializeField]
 	private AudioClip PickUp;
+
 
 	private int int_ShotGun = 2;
 
@@ -156,17 +159,23 @@ public class HandManager : MonoBehaviour
 		GameManager.Instance.GameCamera.transform.DOShakePosition (ShotShakeDuration, ShotShakePower);
 
 		RaycastHit hit;
-		Instantiate (MuzzleFlash, Muzzle.transform.position, Muzzle.transform.rotation);
+		Instantiate (MuzzleFlash, Muzzle.transform.position, Shotgun.transform.rotation);
+		GameObject DatTrail = Instantiate (GunTrail, Muzzle.transform.position, Shotgun.transform.rotation) as GameObject;
 		Vector3 AngleWork = new Vector3 (AX, AY, 0);
-		Debug.DrawRay (Muzzle.transform.position, AngleWork * 1000, Color.red, 5);
+		Debug.DrawRay (Muzzle.transform.position, -Muzzle.transform.up * 1000, Color.red, 5);
 		this.gameObject.transform.parent.GetComponent<PlayerScript> ().PlayAudio (Shoot, 1f);
 		if (Physics.Raycast (Muzzle.transform.position, -Muzzle.transform.up * 1000, out hit)) {
+			DatTrail.transform.DOMove (hit.point, 0.1f, false).OnComplete (() => Destroy (DatTrail));
 			//Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
-				Instantiate (Blood, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
+				if (EnnemieScript.EnnemieLightStatus == Ennemie.LightStatus.InLight) {
+					Instantiate (Blood, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
+				}
 				EnnemieScript.Die ();
 			}
+		} else {
+			Destroy (DatTrail);
 		}
 	}
 
