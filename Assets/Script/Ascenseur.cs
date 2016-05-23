@@ -4,7 +4,8 @@ using DG.Tweening;
 
 public class Ascenseur : MonoBehaviour
 {
-
+	[SerializeField]
+	private GameObject Plateforme;
 	[SerializeField]
 	private GameObject StartPoint;
 	[SerializeField]
@@ -26,23 +27,32 @@ public class Ascenseur : MonoBehaviour
 	{
 		StartPos = StartPoint.transform.position;
 		EndPos = EndPoint.transform.position;
-		this.transform.position = StartPos;
+		Plateforme.transform.position = StartPos;
 	}
 
 	void OnTriggerEnter (Collider Col)
 	{
-		this.transform.DOPause ();
+		Plateforme.transform.DOPause ();
 		if (Col.gameObject.CompareTag ("P1")) {
 			InP1 = true;
-
+			 
 		}
 		if (Col.gameObject.CompareTag ("P2")) {
 			InP2 = true;
 		}
 		if (InP1 && InP2) {
-			this.transform.DOMove (EndPos, Speed, false);
+			Plateforme.transform.DOMove (EndPos, Speed, false);
 		}
-
 	}
 
+	void OnTriggerExit (Collider Col)
+	{
+		Plateforme.transform.DOPause ();
+		if (Col.gameObject.CompareTag ("P1")) {
+			InP1 = false;
+		}
+		if (Col.gameObject.CompareTag ("P2")) {
+			InP2 = false;
+		}
+	}
 }
