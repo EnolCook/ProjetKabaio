@@ -13,7 +13,8 @@ public class Ascenseur : MonoBehaviour
 	[SerializeField]
 	[Tooltip ("This is the time in second to go from start to end")]
 	private float Speed;
-
+	[SerializeField]
+	private float WaitTime;
 	[SerializeField]
 	private bool InP1 = false;
 	[SerializeField]
@@ -34,14 +35,13 @@ public class Ascenseur : MonoBehaviour
 	{
 		Plateforme.transform.DOPause ();
 		if (Col.gameObject.CompareTag ("P1")) {
-			InP1 = true;
-			 
+			InP1 = true; 
 		}
 		if (Col.gameObject.CompareTag ("P2")) {
 			InP2 = true;
 		}
 		if (InP1 && InP2) {
-			Plateforme.transform.DOMove (EndPos, Speed, false);
+			StartCoroutine ("MoveAscenseur");
 		}
 	}
 
@@ -54,5 +54,11 @@ public class Ascenseur : MonoBehaviour
 		if (Col.gameObject.CompareTag ("P2")) {
 			InP2 = false;
 		}
+	}
+
+	IEnumerator MoveAscenseur ()
+	{
+		yield return new WaitForSeconds (WaitTime);
+		Plateforme.transform.DOMove (EndPos, Speed, false);
 	}
 }
