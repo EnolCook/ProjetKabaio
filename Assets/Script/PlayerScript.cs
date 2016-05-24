@@ -24,7 +24,8 @@ public class PlayerScript : MonoBehaviour
 	[Header ("Players Infos")]
 	[SerializeField]
 	private float Speed = 5;
-
+	[SerializeField]
+	private bool AutoAimBackward = false;
 	public int PlayerID;
 	private Player LocalPlayer;
 
@@ -183,12 +184,20 @@ public class PlayerScript : MonoBehaviour
 	{
 		vel = (Right * Speed);
 		PlayerState = AnimState.Right;
+		if (LocalPlayer.GetAxis ("LookX") == 0 && LocalPlayer.GetAxis ("LookY") == 0 && AutoAimBackward) {
+			TempX = 1;
+			HandMana.InputWork (1, 0);
+		}
 	}
 
 	void MoveLeft (InputActionEventData data)
 	{
 		vel = (Left * Speed);
 		PlayerState = AnimState.Left;
+		if (LocalPlayer.GetAxis ("LookX") == 0 && LocalPlayer.GetAxis ("LookY") == 0 && AutoAimBackward) {
+			TempX = -1;
+			HandMana.InputWork (-1, 0);
+		}
 	}
 
 	void Move ()
