@@ -26,19 +26,28 @@ public class Ascenseur : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		GameManager.Death += ResetAscenseur;
 		StartPos = StartPoint.transform.position;
 		EndPos = EndPoint.transform.position;
 		Plateforme.transform.position = StartPos;
 	}
 
+	void ResetAscenseur ()
+	{
+		Plateforme.transform.position = StartPos;
+	}
+
+
 	void OnTriggerEnter (Collider Col)
 	{
-		Plateforme.transform.DOPause ();
+		
 		if (Col.gameObject.CompareTag ("P1")) {
 			InP1 = true; 
+			Plateforme.transform.DOPause ();
 		}
 		if (Col.gameObject.CompareTag ("P2")) {
 			InP2 = true;
+			Plateforme.transform.DOPause ();
 		}
 		if (InP1 && InP2) {
 			StartCoroutine ("MoveAscenseur");
