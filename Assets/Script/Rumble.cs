@@ -2,7 +2,7 @@
 using System.Collections;
 using Rewired;
 
-public class Rumble : MonoBehaviour
+public class Rumble : Singleton<Rumble>
 {
 
 	//both Motor speed has to be between 0.0 and 1.0. duration in seconds.
