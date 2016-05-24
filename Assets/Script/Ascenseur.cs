@@ -40,12 +40,14 @@ public class Ascenseur : MonoBehaviour
 
 	void OnTriggerEnter (Collider Col)
 	{
-		Plateforme.transform.DOPause ();
+		
 		if (Col.gameObject.CompareTag ("P1")) {
 			InP1 = true; 
+			Plateforme.transform.DOPause ();
 		}
 		if (Col.gameObject.CompareTag ("P2")) {
 			InP2 = true;
+			Plateforme.transform.DOPause ();
 		}
 		if (InP1 && InP2) {
 			StartCoroutine ("MoveAscenseur");
