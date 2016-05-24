@@ -95,7 +95,7 @@ public class GameManager : Singleton<GameManager>
 		Player2.transform.position = Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Player2.transform.position;
 		if (IHadLight || Checkpoint.GetComponent<Checkpoint> ().ForceLight) {
 			GameObject Light = Instantiate (LightPrefab, Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Light.transform.position, this.transform.rotation) as GameObject;
-			if (Checkpoint = FirstCheckPoint) {
+			if (Checkpoint == FirstCheckPoint) {
 				Light.GetComponentInChildren<LightScript> ().SetTutoOn ();
 			} else {
 				Light.GetComponentInChildren<LookAtGameobject> ().enabled = false;
