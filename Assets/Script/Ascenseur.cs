@@ -26,10 +26,17 @@ public class Ascenseur : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		GameManager.Death += ResetAscenseur;
 		StartPos = StartPoint.transform.position;
 		EndPos = EndPoint.transform.position;
 		Plateforme.transform.position = StartPos;
 	}
+
+	void ResetAscenseur ()
+	{
+		Plateforme.transform.position = StartPos;
+	}
+
 
 	void OnTriggerEnter (Collider Col)
 	{
