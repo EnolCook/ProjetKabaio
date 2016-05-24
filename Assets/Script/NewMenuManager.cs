@@ -12,6 +12,10 @@ public class NewMenuManager : MonoBehaviour
 	[SerializeField]
 	private GameObject PlayButton;
 	[SerializeField]
+	private GameObject CreditsButton;
+	[SerializeField]
+	private GameObject QuitButton;
+	[SerializeField]
 	private GameObject CurButton;
 	private AxisEventData CurAxis;
 	private GameObject myEventSystem;
@@ -22,6 +26,18 @@ public class NewMenuManager : MonoBehaviour
 	private GameObject GO_Credits;
 	[SerializeField]
 	private GameObject GO_MainMenu;
+
+	private bool InMenu = false;
+
+
+	public enum MainMenuStates
+	{
+		Play,
+		Credits,
+		Quit
+	}
+
+	public MainMenuStates LocalMainStateMenu;
 
 	void Awake ()
 	{
@@ -35,19 +51,59 @@ public class NewMenuManager : MonoBehaviour
 	{
 		CurAxis = new AxisEventData (EventSystem.current);
 		myEventSystem = GameObject.Find ("EventSystem");
-		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (CurButton);
+		UpdateState (MainMenuStates.Play);
 	}
 
 	void Up (InputActionEventData data)
 	{
-		CurAxis.moveDir = MoveDirection.Up;
-		ExecuteEvents.Execute (CurButton, CurAxis, ExecuteEvents.moveHandler);
+		if (!InMenu) {
+			switch (LocalMainStateMenu) {
+			case MainMenuStates.Credits:
+				UpdateState (MainMenuStates.Play);
+				break;
+			case MainMenuStates.Play:
+				UpdateState (MainMenuStates.Quit);
+				break;
+			case MainMenuStates.Quit:
+				UpdateState (MainMenuStates.Credits);
+				break;
+			}
+		}
 	}
 
 	void Down (InputActionEventData data)
 	{
-		CurAxis.moveDir = MoveDirection.Down;
-		ExecuteEvents.Execute (CurButton, CurAxis, ExecuteEvents.moveHandler);
+		if (!InMenu) {
+			switch (LocalMainStateMenu) {
+			case MainMenuStates.Credits:
+				UpdateState (MainMenuStates.Quit);
+				break;
+			case MainMenuStates.Play:
+				UpdateState (MainMenuStates.Credits);
+				break;
+			case MainMenuStates.Quit:
+				UpdateState (MainMenuStates.Play);
+				break;
+			}
+		}
+	}
+
+	public void Play ()
+	{
+		InMenu = true;
+		GO_MainMenu.SetActive (false);
+		GO_Credits.SetActive (false);
+		GO_HowToPlay.SetActive (true);
+		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
+	}
+
+	public void Credits ()
+	{
+		InMenu = true;
+		GO_MainMenu.SetActive (false);
+		GO_Credits.SetActive (true);
+		GO_HowToPlay.SetActive (false);
+		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 	}
 
 	void Select (InputActionEventData data)
@@ -59,28 +115,33 @@ public class NewMenuManager : MonoBehaviour
 			SceneManager.LoadScene ("LD_Final");
 		}
 		if (GO_Credits.activeInHierarchy) {
+			InMenu = false;
 			GO_MainMenu.SetActive (true);
 			GO_Credits.SetActive (false);
 			GO_HowToPlay.SetActive (false);
 			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 		}
-
 	}
 
-	public void Play ()
-	{
-		GO_MainMenu.SetActive (false);
-		GO_Credits.SetActive (false);
-		GO_HowToPlay.SetActive (true);
-		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
-	}
 
-	public void Credits ()
+
+
+
+	public void UpdateState (MainMenuStates TargetState)
 	{
-		GO_MainMenu.SetActive (false);
-		GO_Credits.SetActive (true);
-		GO_HowToPlay.SetActive (false);
-		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
+		LocalMainStateMenu = TargetState;
+		switch (LocalMainStateMenu) {
+		case MainMenuStates.Credits:
+			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (CreditsButton);
+			break;
+		case MainMenuStates.Play:
+			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (PlayButton);
+			break;
+		case MainMenuStates.Quit:
+			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (QuitButton);
+			break;
+		}
+
 	}
 
 	public void QuitGame ()
