@@ -70,6 +70,6 @@ public class Ascenseur : MonoBehaviour
 	IEnumerator MoveAscenseur ()
 	{
 		yield return new WaitForSeconds (WaitTime);
-		Plateforme.transform.DOMove (EndPos, Speed, false);
+		Plateforme.transform.DOMove (EndPos, Speed, false).SetEase (Ease.InOutSine);
 	}
 }
