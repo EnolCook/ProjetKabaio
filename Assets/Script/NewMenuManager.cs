@@ -50,17 +50,27 @@ public class NewMenuManager : MonoBehaviour
 
 	void Select (InputActionEventData data)
 	{
+		if (GO_HowToPlay.activeInHierarchy) {
+			GO_MainMenu.SetActive (false);
+			GO_Credits.SetActive (false);
+			GO_HowToPlay.SetActive (false);
+			SceneManager.LoadScene ("LD_Final");
+		}
 		if (GO_Credits.activeInHierarchy) {
 			GO_MainMenu.SetActive (true);
 			GO_Credits.SetActive (false);
 			GO_HowToPlay.SetActive (false);
-			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (CurButton);
+			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 		}
+
 	}
 
 	public void Play ()
 	{
-		
+		GO_MainMenu.SetActive (false);
+		GO_Credits.SetActive (false);
+		GO_HowToPlay.SetActive (true);
+		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 	}
 
 	public void Credits ()
