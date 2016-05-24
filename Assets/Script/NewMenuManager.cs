@@ -10,6 +10,8 @@ public class NewMenuManager : MonoBehaviour
 	public int PlayerID;
 	private Player LocalPlayer;
 	[SerializeField]
+	private GameObject PlayButton;
+	[SerializeField]
 	private GameObject CurButton;
 	private AxisEventData CurAxis;
 	private GameObject myEventSystem;
