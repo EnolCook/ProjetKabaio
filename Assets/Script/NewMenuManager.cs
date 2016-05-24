@@ -29,7 +29,6 @@ public class NewMenuManager : MonoBehaviour
 
 	private bool InMenu = false;
 
-
 	public enum MainMenuStates
 	{
 		Play,
@@ -122,10 +121,6 @@ public class NewMenuManager : MonoBehaviour
 			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 		}
 	}
-
-
-
-
 
 	public void UpdateState (MainMenuStates TargetState)
 	{
