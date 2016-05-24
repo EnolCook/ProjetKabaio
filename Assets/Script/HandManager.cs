@@ -66,6 +66,12 @@ public class HandManager : MonoBehaviour
 		this.gameObject.transform.parent.GetComponent<PlayerScript> ().PlayAudio (PickUp, 1f);
 		InHand = Hand.Light;
 		LightToTake.GetComponentInChildren<LightScript> ().OnTaken (this.gameObject.transform.parent.tag);
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 0) {
+			Rumble.Instance.RumbleMe (0, 0.1f, 0.1f, 0.1f);
+		}
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 1) {
+			Rumble.Instance.RumbleMe (1, 0.1f, 0.1f, 0.1f);
+		}
 		SpotLight.SetActive (true);
 		Shotgun.SetActive (false);
 	}
@@ -82,6 +88,12 @@ public class HandManager : MonoBehaviour
 		InHand = Hand.Shotgun;
 		SpotLight.SetActive (false);
 		Shotgun.SetActive (true);
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 0) {
+			Rumble.Instance.RumbleMe (0, 0.1f, 0.1f, 0.1f);
+		}
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 1) {
+			Rumble.Instance.RumbleMe (1, 0.1f, 0.1f, 0.1f);
+		}
 		Instantiate (LightPrefab, Spawnpoint.transform.position, this.transform.rotation);
 	}
 
@@ -97,6 +109,12 @@ public class HandManager : MonoBehaviour
 		InHand = Hand.Shotgun;
 		SpotLight.SetActive (false);
 		Shotgun.SetActive (true);
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 0) {
+			Rumble.Instance.RumbleMe (0, 0.4f, 0.4f, 0.1f);
+		}
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 1) {
+			Rumble.Instance.RumbleMe (1, 0.4f, 0.4f, 0.1f);
+		}
 		GameObject LightTrowed = Instantiate (LightPrefab, Spawnpoint.transform.position, this.transform.rotation) as GameObject;
 		LightTrowed.GetComponent<Rigidbody> ().AddForce (Spawnpoint.transform.TransformDirection (Vector3.forward) * (LightThrowPower * 100));
 	}
@@ -157,6 +175,14 @@ public class HandManager : MonoBehaviour
 	{
 
 		GameManager.Instance.GameCamera.transform.DOShakePosition (ShotShakeDuration, ShotShakePower);
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 0) {
+			Rumble.Instance.RumbleMe (0, 0.8f, 0.8f, 0.1f);
+		}
+		if (this.transform.parent.GetComponent<PlayerScript> ().PlayerID == 1) {
+			Rumble.Instance.RumbleMe (1, 0.8f, 0.8f, 0.1f);
+		}
+
+
 
 		RaycastHit hit;
 		Instantiate (MuzzleFlash, Muzzle.transform.position, Shotgun.transform.rotation);

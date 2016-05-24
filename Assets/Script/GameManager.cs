@@ -63,6 +63,8 @@ public class GameManager : Singleton<GameManager>
 	public void OnPlayerDied ()
 	{
 		//GameOverScreen
+		Rumble.Instance.RumbleMe (0, 1, 1, 0.4f);
+		Rumble.Instance.RumbleMe (1, 1, 1, 0.4f);
 		if (Player1.transform.position.y < Player2.transform.position.y) {
 			Deepness = Mathf.Round (Mathf.Abs (Player1.transform.position.y)); 
 		} else if (Player2.transform.position.y < Player1.transform.position.y) {
