@@ -47,12 +47,14 @@ public class Ascenseur : MonoBehaviour
 
 	void OnTriggerExit (Collider Col)
 	{
-		Plateforme.transform.DOPause ();
+		
 		if (Col.gameObject.CompareTag ("P1")) {
 			InP1 = false;
+			Plateforme.transform.DOPause ();
 		}
 		if (Col.gameObject.CompareTag ("P2")) {
 			InP2 = false;
+			Plateforme.transform.DOPause ();
 		}
 	}
 
