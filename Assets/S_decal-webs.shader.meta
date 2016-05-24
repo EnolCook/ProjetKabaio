@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: cc2cce422b8b13b4fb12ae7df9e91a21
+timeCreated: 1464014557
+licenseType: Pro
+ShaderImporter:
+  defaultTextures:
+  - _decal: {fileID: 2800000, guid: 07367a338463dcd47b8026ce95264cf5, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
