@@ -98,7 +98,7 @@ public class GameManager : Singleton<GameManager>
 			if (Checkpoint == FirstCheckPoint) {
 				Light.GetComponentInChildren<LightScript> ().SetTutoOn ();
 			} else {
-				Light.GetComponentInChildren<LookAtGameobject> ().enabled = false;
+				Light.GetComponentInChildren<LightScript> ().SetTutoOff ();
 			}
 		}
 		IHadLight = false;

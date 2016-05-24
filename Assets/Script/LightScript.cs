@@ -68,4 +68,10 @@ public class LightScript : MonoBehaviour
 	{
 		Tuto = true;
 	}
+
+	public void SetTutoOff ()
+	{
+		//this.gameObject.GetComponentInChildren<LookAtGameobject> ().enabled = false;
+		//We should disable LookAtObject Script on the Tuto's Canvas to gain perf. If we have time / if we drop at 10 fps.
+	}
 }
