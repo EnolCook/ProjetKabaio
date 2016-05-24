@@ -162,9 +162,9 @@ public class HandManager : MonoBehaviour
 		Instantiate (MuzzleFlash, Muzzle.transform.position, Shotgun.transform.rotation);
 		GameObject DatTrail = Instantiate (GunTrail, Muzzle.transform.position, Shotgun.transform.rotation) as GameObject;
 		Vector3 AngleWork = new Vector3 (AX, AY, 0);
-		Debug.DrawRay (Muzzle.transform.position, -Muzzle.transform.up * 1000, Color.red, 5);
+		Debug.DrawRay (Muzzle.transform.position, AngleWork * 1000, Color.red, 5);
 		this.gameObject.transform.parent.GetComponent<PlayerScript> ().PlayAudio (Shoot, 1f);
-		if (Physics.Raycast (Muzzle.transform.position, -Muzzle.transform.up * 1000, out hit)) {
+		if (Physics.Raycast (Muzzle.transform.position, AngleWork * 1000, out hit)) {
 			DatTrail.transform.DOMove (hit.point, 0.1f, false).OnComplete (() => Destroy (DatTrail));
 			//Debug.Log (hit.collider.gameObject.name);
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
