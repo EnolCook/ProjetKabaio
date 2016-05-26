@@ -39,7 +39,7 @@ public class Checkpoint : MonoBehaviour
 				}
 			}
 			foreach (GameObject GOLight in GO_Lights) {
-				GOLight.SetActive (trued);
+				GOLight.SetActive (true);
 				GOLight.transform.DOScale (new Vector3 (0.3f, 0.6f, 0.6f), 0.5f);
 
 			}
