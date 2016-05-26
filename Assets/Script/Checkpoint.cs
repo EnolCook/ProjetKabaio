@@ -17,12 +17,14 @@ public class Checkpoint : MonoBehaviour
 
 	void Start ()
 	{
-		foreach (Light L in Lights) {
-			L.intensity = 0;
-		}
-		foreach (GameObject GOLight in GO_Lights) {
-			GOLight.transform.DOScale (new Vector3 (0, 0, 0), 0.1f);
-			GOLight.SetActive (false);
+		if (!First) {
+			foreach (Light L in Lights) {
+				L.intensity = 0;
+			}
+			foreach (GameObject GOLight in GO_Lights) {
+				GOLight.transform.DOScale (new Vector3 (0, 0, 0), 0.1f);
+				GOLight.SetActive (false);
+			}
 		}
 	}
 
@@ -37,7 +39,7 @@ public class Checkpoint : MonoBehaviour
 				}
 			}
 			foreach (GameObject GOLight in GO_Lights) {
-				GOLight.SetActive (true);
+				GOLight.SetActive (trued);
 				GOLight.transform.DOScale (new Vector3 (0.3f, 0.6f, 0.6f), 0.5f);
 
 			}
