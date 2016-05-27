@@ -13,7 +13,11 @@ public class Checkpoint : MonoBehaviour
 	public GameObject[] GO_Lights;
 	[SerializeField]
 	private bool First = false;
+	[SerializeField]
+	private bool TutoOnLight = false;
 	public bool ForceLight = false;
+
+	private GameObject LightSpawned;
 
 	void Start ()
 	{
@@ -28,6 +32,19 @@ public class Checkpoint : MonoBehaviour
 		}
 	}
 
+	public void SetLightSpawned (GameObject GO)
+	{
+		LightSpawned = GO;
+		if (First) {
+			Destroy (GO);
+		} else {
+			if (TutoOnLight) {
+				GO.GetComponentInChildren<LightScript> ().SetTutoOn ();
+			} else {
+				GO.GetComponentInChildren<LightScript> ().SetTutoOff ();
+			}
+		}
+	}
 
 	void OnTriggerEnter (Collider Thing)
 	{
