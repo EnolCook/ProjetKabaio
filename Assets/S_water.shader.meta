@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: e2ad0e4ac028a6340a1192b602e15edc
+timeCreated: 1460535249
+licenseType: Pro
+ShaderImporter:
+  defaultTextures:
+  - _Waves_pattern: {fileID: 2800000, guid: dd5e91ced001f3743be2e20c295246ab, type: 3}
+  - _Waves_pattern_normal_B: {fileID: 2800000, guid: 16ef51d67db8e2546ad6b300f836bfec,
+      type: 3}
+  - _Waves_pattern_normal_G: {fileID: 2800000, guid: 22927d575be0a004982326a43e3e639c,
+      type: 3}
+  - _Waves_pattern_normal_R: {fileID: 2800000, guid: c87e63f182c6d2f45900c14b8c740786,
+      type: 3}
+  - _Waves_pattern_normal_A: {fileID: 2800000, guid: e0a34826bb8ddc241822c9934a8c7172,
+      type: 3}
+  - _foam_pattern: {fileID: 2800000, guid: 471bb7eba5056e844b702c9aff042236, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
