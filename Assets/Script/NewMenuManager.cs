@@ -37,6 +37,8 @@ public class NewMenuManager : MonoBehaviour
 	private GameObject GO_MainMenu;
 	[SerializeField]
 	private GameObject FadeIn;
+	[SerializeField]
+	private GameObject GO_Title;
 
 	private bool InMenu = false;
 
