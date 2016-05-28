@@ -68,6 +68,7 @@ public class NewMenuManager : MonoBehaviour
 		CurAxis = new AxisEventData (EventSystem.current);
 		myEventSystem = GameObject.Find ("EventSystem");
 		FadeIn.GetComponent<Image> ().DOFade (0, 1).OnComplete (() => UpdateState (MainMenuStates.Play));
+		//GO_Title.transform.DOScale (1, 3);
 	}
 
 	void Up (InputActionEventData data)
