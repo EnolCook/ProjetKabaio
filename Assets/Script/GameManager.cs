@@ -10,8 +10,15 @@ public class GameManager : Singleton<GameManager>
 
 	public static event DeathActions Death;
 
+	public delegate void EndActions ();
+
+	public static event EndActions End;
+
 	public GameObject Player1;
 	public GameObject Player2;
+
+	public float EndTime;
+
 
 	[SerializeField]
 	private GameObject FirstCheckPoint;
@@ -108,6 +115,11 @@ public class GameManager : Singleton<GameManager>
 		IHadLight = false;
 	}
 
+	public void LaunchEnd (float time)
+	{
+		EndTime = time;
+		End ();
+	}
 
 
 }
