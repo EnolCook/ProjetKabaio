@@ -5,9 +5,13 @@ public class LightSound : MonoBehaviour
 {
 	[SerializeField]
 	private AudioClip Throw;
+	[SerializeField]
+	private bool IWasPutHereByHand = false;
 
 	void OnCollisionEnter (Collision Thing)
 	{
-		this.GetComponent<AudioSource> ().PlayOneShot (Throw);
+		if (!IWasPutHereByHand) {
+			this.GetComponent<AudioSource> ().PlayOneShot (Throw);
+		}
 	}
 }
