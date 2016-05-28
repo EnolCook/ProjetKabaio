@@ -4,6 +4,7 @@ using Rewired;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class NewMenuManager : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class NewMenuManager : MonoBehaviour
 
 	private bool InMenu = false;
 
+	private AudioSource LocalAudio;
+
 	public enum MainMenuStates
 	{
 		Play,
@@ -40,6 +43,7 @@ public class NewMenuManager : MonoBehaviour
 
 	void Awake ()
 	{
+		DOTween.Init ();
 		LocalPlayer = ReInput.players.GetPlayer (PlayerID);
 		LocalPlayer.AddInputEventDelegate (Up, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "UP");
 		LocalPlayer.AddInputEventDelegate (Down, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "DOWN");
@@ -48,6 +52,7 @@ public class NewMenuManager : MonoBehaviour
 
 	void Start ()
 	{
+		LocalAudio = this.gameObject.GetComponent<AudioSource> ();
 		CurAxis = new AxisEventData (EventSystem.current);
 		myEventSystem = GameObject.Find ("EventSystem");
 		UpdateState (MainMenuStates.Play);
@@ -90,6 +95,7 @@ public class NewMenuManager : MonoBehaviour
 	public void Play ()
 	{
 		InMenu = true;
+		LocalAudio.DOFade (0, 2);
 		GO_MainMenu.SetActive (false);
 		GO_Credits.SetActive (false);
 		GO_HowToPlay.SetActive (true);
