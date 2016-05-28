@@ -196,7 +196,12 @@ public class HandManager : MonoBehaviour
 			if (hit.collider.gameObject.CompareTag ("Ennemie")) {
 				Ennemie EnnemieScript = hit.collider.gameObject.GetComponent<Ennemie> ();
 				if (EnnemieScript.EnnemieLightStatus == Ennemie.LightStatus.InLight) {
-					Instantiate (Blood, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
+					if (EnnemieScript.IsItBoss ()) {
+						GameObject BloodParticle = Instantiate (Blood, new Vector3 (hit.point.x, hit.point.y, hit.point.z), hit.collider.gameObject.transform.rotation) as GameObject;
+						BloodParticle.transform.DOScale (1, 1);
+					} else {
+						GameObject BloodParticle = Instantiate (Blood, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation) as GameObject;
+					}
 				}
 				EnnemieScript.Die ();
 			}

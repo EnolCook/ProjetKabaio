@@ -89,6 +89,11 @@ public class Ennemie : MonoBehaviour
 
 	}
 
+	public bool IsItBoss ()
+	{
+		return IsBoss;
+	}
+
 	void FollowUntilDED ()
 	{
 		Agent.SetDestination (PlayerToFollow.transform.position);
