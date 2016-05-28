@@ -40,6 +40,8 @@ public class Ascenseur : MonoBehaviour
 	void ResetAscenseur ()
 	{
 		Plateforme.transform.position = StartPos;
+		InP1 = false;
+		InP2 = false;
 	}
 
 
