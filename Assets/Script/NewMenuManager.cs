@@ -24,7 +24,15 @@ public class NewMenuManager : MonoBehaviour
 	[SerializeField]
 	private GameObject GO_HowToPlay;
 	[SerializeField]
+	private Image GO_HowToPlay_Img1;
+	[SerializeField]
+	private Image GO_HowToPlay_Img2;
+	[SerializeField]
 	private GameObject GO_Credits;
+	[SerializeField]
+	private Image GO_Credits_Img1;
+	[SerializeField]
+	private Image GO_Credits_Img2;
 	[SerializeField]
 	private GameObject GO_MainMenu;
 	[SerializeField]
@@ -57,7 +65,7 @@ public class NewMenuManager : MonoBehaviour
 		LocalAudio = this.gameObject.GetComponent<AudioSource> ();
 		CurAxis = new AxisEventData (EventSystem.current);
 		myEventSystem = GameObject.Find ("EventSystem");
-		UpdateState (MainMenuStates.Play);
+		FadeIn.GetComponent<Image> ().DOFade (0, 1).OnComplete (() => UpdateState (MainMenuStates.Play));
 	}
 
 	void Up (InputActionEventData data)
@@ -101,6 +109,8 @@ public class NewMenuManager : MonoBehaviour
 		GO_MainMenu.SetActive (false);
 		GO_Credits.SetActive (false);
 		GO_HowToPlay.SetActive (true);
+		GO_HowToPlay_Img1.DOFade (1, 1);
+		GO_HowToPlay_Img2.DOFade (0.03f, 1);
 		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 	}
 
@@ -110,6 +120,8 @@ public class NewMenuManager : MonoBehaviour
 		GO_MainMenu.SetActive (false);
 		GO_Credits.SetActive (true);
 		GO_HowToPlay.SetActive (false);
+		GO_Credits_Img1.DOFade (1, 1);
+		GO_Credits_Img2.DOFade (0.03f, 1);
 		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 	}
 
@@ -126,10 +138,13 @@ public class NewMenuManager : MonoBehaviour
 		}
 		if (GO_Credits.activeInHierarchy) {
 			InMenu = false;
-			GO_MainMenu.SetActive (true);
-			GO_Credits.SetActive (false);
-			GO_HowToPlay.SetActive (false);
-			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
+			GO_Credits_Img1.DOFade (0, 1);
+			GO_Credits_Img2.DOFade (0, 1).OnComplete (() => {
+				GO_MainMenu.SetActive (true);
+				GO_Credits.SetActive (false);
+				GO_HowToPlay.SetActive (false);
+				myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
+			});
 		}
 	}
 
