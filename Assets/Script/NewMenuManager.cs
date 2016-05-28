@@ -139,12 +139,21 @@ public class NewMenuManager : MonoBehaviour
 		switch (LocalMainStateMenu) {
 		case MainMenuStates.Credits:
 			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (CreditsButton);
+			CreditsButton.transform.DOScale (1.2f, 0.2f);
+			PlayButton.transform.DOScale (1f, 0.2f);
+			QuitButton.transform.DOScale (1f, 0.2f);
 			break;
 		case MainMenuStates.Play:
 			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (PlayButton);
+			PlayButton.transform.DOScale (1.2f, 0.2f);
+			CreditsButton.transform.DOScale (1f, 0.2f);
+			QuitButton.transform.DOScale (1f, 0.2f);
 			break;
 		case MainMenuStates.Quit:
 			myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (QuitButton);
+			QuitButton.transform.DOScale (1.2f, 0.2f);
+			PlayButton.transform.DOScale (1f, 0.2f);
+			CreditsButton.transform.DOScale (1f, 0.2f);
 			break;
 		}
 
