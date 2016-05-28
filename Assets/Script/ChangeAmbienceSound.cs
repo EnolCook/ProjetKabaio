@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class ChangeAmbienceSound : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class ChangeAmbienceSound : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		GameManager.End += Ending;
 		AbianceSource.Stop ();
 		AbianceSource.clip = Surface;
 		AbianceSource.Play ();
@@ -35,6 +37,11 @@ public class ChangeAmbienceSound : MonoBehaviour
 				AbianceSource.DOFade (1, 1);
 			});
 		}
+	}
+
+	void Ending ()
+	{
+		AbianceSource.DOFade (0, GameManager.Instance.EndTime).OnComplete (() => SceneManager.LoadScene ("Menu"));
 	}
 
 }
