@@ -11,6 +11,11 @@ public class EndFade : MonoBehaviour
 	[SerializeField]
 	private float TimeToFade;
 
+	void Start ()
+	{
+		END.DOFade (0, 8);
+	}
+
 	void OnTriggerEnter (Collider thing)
 	{
 		GameManager.Instance.LaunchEnd (TimeToFade);

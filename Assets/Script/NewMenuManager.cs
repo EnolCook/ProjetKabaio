@@ -27,6 +27,8 @@ public class NewMenuManager : MonoBehaviour
 	private GameObject GO_Credits;
 	[SerializeField]
 	private GameObject GO_MainMenu;
+	[SerializeField]
+	private GameObject FadeIn;
 
 	private bool InMenu = false;
 
@@ -114,10 +116,13 @@ public class NewMenuManager : MonoBehaviour
 	void Select (InputActionEventData data)
 	{
 		if (GO_HowToPlay.activeInHierarchy) {
-			GO_MainMenu.SetActive (false);
-			GO_Credits.SetActive (false);
-			GO_HowToPlay.SetActive (false);
-			SceneManager.LoadScene ("LD_Final");
+			FadeIn.GetComponent<Image> ().DOFade (1, 1).OnComplete (() => {
+				GO_MainMenu.SetActive (false);
+				GO_Credits.SetActive (false);
+				GO_HowToPlay.SetActive (false);
+				SceneManager.LoadScene ("LD_Final");
+			});
+
 		}
 		if (GO_Credits.activeInHierarchy) {
 			InMenu = false;
