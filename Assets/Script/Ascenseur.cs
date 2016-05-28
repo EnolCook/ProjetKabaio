@@ -40,6 +40,8 @@ public class Ascenseur : MonoBehaviour
 	void ResetAscenseur ()
 	{
 		Plateforme.transform.position = StartPos;
+		InP1 = false;
+		InP2 = false;
 	}
 
 
@@ -84,6 +86,7 @@ public class Ascenseur : MonoBehaviour
 	IEnumerator MoveAscenseur ()
 	{
 		yield return new WaitForSeconds (WaitTime);
+		LocalAudioSource.volume = 1;
 		LocalAudioSource.PlayOneShot (AscenseurAudio, 0.8f);
 		Plateforme.transform.DOMove (EndPos, Speed, false).SetEase (Ease.InOutSine).OnComplete (() => Arrived ());
 	}
