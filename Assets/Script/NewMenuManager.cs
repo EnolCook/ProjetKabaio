@@ -113,7 +113,7 @@ public class NewMenuManager : MonoBehaviour
 		GO_Credits.SetActive (false);
 		GO_HowToPlay.SetActive (true);
 		GO_HowToPlay_Img1.DOFade (1, 1);
-		GO_HowToPlay_Img2.DOFade (0.03f, 1);
+		GO_HowToPlay_Img2.DOFade (1f, 1);
 		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 	}
 
@@ -124,7 +124,7 @@ public class NewMenuManager : MonoBehaviour
 		GO_Credits.SetActive (true);
 		GO_HowToPlay.SetActive (false);
 		GO_Credits_Img1.DOFade (1, 1);
-		GO_Credits_Img2.DOFade (0.03f, 1);
+		GO_Credits_Img2.DOFade (1f, 1);
 		myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
 	}
 
