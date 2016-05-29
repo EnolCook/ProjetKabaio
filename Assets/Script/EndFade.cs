@@ -9,7 +9,12 @@ public class EndFade : MonoBehaviour
 	[SerializeField]
 	private Image END;
 	[SerializeField]
+	private Image Title;
+	[SerializeField]
 	private float TimeToFade;
+
+	[SerializeField]
+	private bool PrezMode = false;
 
 	void Start ()
 	{
@@ -18,9 +23,15 @@ public class EndFade : MonoBehaviour
 
 	void OnTriggerEnter (Collider thing)
 	{
-		GameManager.Instance.LaunchEnd (TimeToFade);
+		
+
 		if (thing.tag == "P1" || thing.tag == "P2") {
-			END.DOFade (1, TimeToFade);
+			if (!PrezMode) {
+				GameManager.Instance.LaunchEnd (TimeToFade);
+				END.DOFade (1, TimeToFade);
+			} else {
+				END.DOFade (1, TimeToFade).OnComplete (() => Title.DOFade (1, 3));
+			}
 		}
 	}
 }
