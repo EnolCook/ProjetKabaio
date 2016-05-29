@@ -73,8 +73,10 @@ public class PlayerScript : MonoBehaviour
 	[SerializeField]
 	private AudioClip Walk;
 
+
 	void Start ()
 	{
+		
 		Controller = GetComponent<CharacterController> ();
 		Right = transform.TransformDirection (Vector3.right);
 		Left = transform.TransformDirection (Vector3.left);
@@ -90,6 +92,16 @@ public class PlayerScript : MonoBehaviour
 
 	void Awake ()
 	{
+		if (PlayerID == 0) {
+			if (GameManager.Instance.Player1 == null) {
+				GameManager.Instance.Player1 = this.gameObject;
+			}
+		}
+		if (PlayerID == 1) {
+			if (GameManager.Instance.Player2 == null) {
+				GameManager.Instance.Player2 = this.gameObject;
+			}
+		}
 		LocalPlayer = ReInput.players.GetPlayer (PlayerID);
 		DOTween.Init ();
 		LocalPlayer.AddInputEventDelegate (Jump, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Jump");
