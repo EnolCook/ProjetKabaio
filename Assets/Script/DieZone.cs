@@ -3,6 +3,16 @@ using System.Collections;
 
 public class DieZone : MonoBehaviour
 {
+	[SerializeField]
+	private AudioClip Blood;
+
+
+	private AudioSource LocalAudio;
+
+	void Start ()
+	{
+		LocalAudio = this.gameObject.GetComponent<AudioSource> ();
+	}
 
 	void OnTriggerEnter (Collider Thing)
 	{
@@ -13,7 +23,7 @@ public class DieZone : MonoBehaviour
 			if (Thing.gameObject.CompareTag ("P2")) {
 				GameManager.Instance.PiegePlayerDie (2);
 			}
-
+			LocalAudio.PlayOneShot (Blood, 1);
 		}
 	}
 }

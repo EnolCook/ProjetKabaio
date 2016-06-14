@@ -24,7 +24,12 @@ public class PlayerScript : MonoBehaviour
 	[Header ("Players Infos")]
 	[SerializeField]
 	private float Speed = 5;
-
+	[SerializeField]
+	private bool AutoAimBackward = false;
+	[SerializeField]
+	private bool BackwardSpeedSlower = false;
+	[SerializeField]
+	private float BackwardSpeed = 3;
 	public int PlayerID;
 	private Player LocalPlayer;
 
@@ -68,8 +73,10 @@ public class PlayerScript : MonoBehaviour
 	[SerializeField]
 	private AudioClip Walk;
 
+
 	void Start ()
 	{
+		
 		Controller = GetComponent<CharacterController> ();
 		Right = transform.TransformDirection (Vector3.right);
 		Left = transform.TransformDirection (Vector3.left);
@@ -85,6 +92,16 @@ public class PlayerScript : MonoBehaviour
 
 	void Awake ()
 	{
+		if (PlayerID == 0) {
+			if (GameManager.Instance.Player1 == null) {
+				GameManager.Instance.Player1 = this.gameObject;
+			}
+		}
+		if (PlayerID == 1) {
+			if (GameManager.Instance.Player2 == null) {
+				GameManager.Instance.Player2 = this.gameObject;
+			}
+		}
 		LocalPlayer = ReInput.players.GetPlayer (PlayerID);
 		DOTween.Init ();
 		LocalPlayer.AddInputEventDelegate (Jump, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Jump");
@@ -181,14 +198,32 @@ public class PlayerScript : MonoBehaviour
 
 	void MoveRight (InputActionEventData data)
 	{
-		vel = (Right * Speed);
+		if (BackwardSpeedSlower && TempX < 0) {
+			vel = (Right * BackwardSpeed);
+		} else {
+			vel = (Right * Speed);
+		}
+
 		PlayerState = AnimState.Right;
+		if (LocalPlayer.GetAxis ("LookX") == 0 && LocalPlayer.GetAxis ("LookY") == 0 && AutoAimBackward) {
+			TempX = 1;
+			HandMana.InputWork (1, 0);
+		}
 	}
 
 	void MoveLeft (InputActionEventData data)
 	{
-		vel = (Left * Speed);
+		if (BackwardSpeedSlower && TempX > 0) {
+			vel = (Left * BackwardSpeed);
+		} else {
+			vel = (Left * Speed);
+		}
+
 		PlayerState = AnimState.Left;
+		if (LocalPlayer.GetAxis ("LookX") == 0 && LocalPlayer.GetAxis ("LookY") == 0 && AutoAimBackward) {
+			TempX = -1;
+			HandMana.InputWork (-1, 0);
+		}
 	}
 
 	void Move ()

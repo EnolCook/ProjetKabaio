@@ -10,8 +10,15 @@ public class GameManager : Singleton<GameManager>
 
 	public static event DeathActions Death;
 
+	public delegate void EndActions ();
+
+	public static event EndActions End;
+
 	public GameObject Player1;
 	public GameObject Player2;
+
+	public float EndTime;
+
 
 	[SerializeField]
 	private GameObject FirstCheckPoint;
@@ -63,6 +70,8 @@ public class GameManager : Singleton<GameManager>
 	public void OnPlayerDied ()
 	{
 		//GameOverScreen
+		Rumble.Instance.RumbleMe (0, 1, 1, 0.4f);
+		Rumble.Instance.RumbleMe (1, 1, 1, 0.4f);
 		if (Player1.transform.position.y < Player2.transform.position.y) {
 			Deepness = Mathf.Round (Mathf.Abs (Player1.transform.position.y)); 
 		} else if (Player2.transform.position.y < Player1.transform.position.y) {
@@ -94,11 +103,23 @@ public class GameManager : Singleton<GameManager>
 		Player1.transform.position = Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Player1.transform.position;
 		Player2.transform.position = Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Player2.transform.position;
 		if (IHadLight || Checkpoint.GetComponent<Checkpoint> ().ForceLight) {
-			Instantiate (LightPrefab, Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Light.transform.position, this.transform.rotation);
+			
+			if (Checkpoint == FirstCheckPoint) {
+				//Light.GetComponentInChildren<LightScript> ().SetTutoOn ();
+			} else {
+				GameObject Light = Instantiate (LightPrefab, Checkpoint.GetComponent<Checkpoint> ().SpawnPoint_Light.transform.position, this.transform.rotation) as GameObject;
+				Checkpoint.GetComponentInChildren<Checkpoint> ().SetLightSpawned (Light);
+				//Light.GetComponentInChildren<LightScript> ().SetTutoOff ();
+			}
 		}
 		IHadLight = false;
 	}
 
+	public void LaunchEnd (float time)
+	{
+		EndTime = time;
+		End ();
+	}
 
 
 }
